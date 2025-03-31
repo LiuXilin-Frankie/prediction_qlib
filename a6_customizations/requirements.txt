@@ -1,0 +1,8 @@
+polars
+cython
+torch 
+torchvision 
+torchaudio
+pyqlib
+xgboost
+catboost
