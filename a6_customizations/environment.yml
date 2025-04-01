@@ -22,6 +22,7 @@ dependencies:
   - mplfinance
   - ta-lib
   - plotly
+  - fire
   - pip:
     # 为pip包也添加清华源
     - --index-url https://pypi.tuna.tsinghua.edu.cn/simple

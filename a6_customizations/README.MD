@@ -31,7 +31,14 @@ python setup.py install
 ### 下载数据
 ```shell
 cd qlib
+# 下载1日数据
 python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/cn_data --region cn
+
+# 下载1分钟数据
+python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/qlib_cn_1min --region cn --interval 1min
+
+# 下载US数据
+python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/us_data --region us
 cd ..
 ```
 
