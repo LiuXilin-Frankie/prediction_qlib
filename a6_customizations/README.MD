@@ -29,17 +29,19 @@ python setup.py install
 ```
 
 ### 下载数据
+手动下载一段时间再[分段更新](https://www.wuzao.com/document/qlib/component/data.html#id13)
 ```shell
-cd qlib
 # 下载1日数据
 python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/cn_data --region cn
 
-# 下载1分钟数据
+# 下载1分钟数据(部分下载)
 python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/qlib_cn_1min --region cn --interval 1min
+# 更新区间数据
 
 # 下载US数据
 python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/us_data --region us
-cd ..
+
+python scripts/data_collector/yahoo/collector.py update_data_to_bin --qlib_data_1d_dir <user data dir> --trading_date <start date> --end_date <end date>
 ```
 
 ### 运行模型进行测试
