@@ -5,6 +5,8 @@
 2. A股市场 10min后的收益，基于1min的kline
 3. 商品期权期货市场 波动率和高频价格变动率，基于LOB和trade数据
 
+Qlib支持目标需求的[高频数据预测任务](https://www.wuzao.com/document/qlib/component/highfreq.html#id3)
+
 ## 项目结构
 
 项目被重构为模块化设计，分为以下几个主要组件：
