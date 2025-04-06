@@ -16,6 +16,10 @@ from qlib.tests.data import GetData
 
 from highfreq_ops import get_calendar_day, DayLast, FFillNan, BFillNan, Date, Select, IsNull, Cut
 
+import warnings
+# 忽略 FutureWarning
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 class HighfreqWorkflow:
     SPEC_CONF = {"custom_ops": [DayLast, FFillNan, BFillNan, Date, Select, IsNull, Cut], "expression_cache": None}
