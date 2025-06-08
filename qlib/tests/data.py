@@ -14,13 +14,21 @@ from pathlib import Path
 from loguru import logger
 from qlib.utils import exists_qlib_data
 
+"""
+a6so1utex添加的备注主要由 # 和中文组成
+
+下载日线数据调用该文件的具体命令是
+python scripts/get_data.py download_data --file_name csv_data_cn.zip --target_dir ~/.qlib/csv_data/cn_data
+"""
+
 
 class GetData:
     REMOTE_URL = "https://github.com/SunsetWolf/qlib_dataset/releases/download"
 
     def __init__(self, delete_zip_file=False):
+        # 初始化，是否数据转化后删除下载的zip文件
         """
-
+        
         Parameters
         ----------
         delete_zip_file : bool, optional
@@ -29,6 +37,7 @@ class GetData:
         self.delete_zip_file = delete_zip_file
 
     def merge_remote_url(self, file_name: str):
+        # 生成下载数据的链接
         """
         Generate download links.
 
@@ -209,3 +218,6 @@ class GetData:
         if not self.check_dataset(file_name):
             file_name = _get_file_name_with_version("latest", dataset_version=version)
         self.download_data(file_name.lower(), target_dir, delete_old)
+        
+        
+        
