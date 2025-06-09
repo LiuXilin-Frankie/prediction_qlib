@@ -51,6 +51,7 @@ class GetData:
         return f"{self.REMOTE_URL}/{file_name}" if "/" in file_name else f"{self.REMOTE_URL}/v0/{file_name}"
 
     def download(self, url: str, target_path: [Path, str]):
+        # 从特定链接下载文件
         """
         Download a file from the specified url.
 
