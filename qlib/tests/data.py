@@ -21,6 +21,9 @@ a6so1utex添加的备注主要由 # 和中文组成
 python scripts/get_data.py download_data --file_name csv_data_cn.zip --target_dir ~/.qlib/csv_data/cn_data
 """
 
+# 该文件主要从已经处理好的qlib数据库下载数据并且解压缩
+# 数据下载前已经是qlib的数据格式
+
 
 class GetData:
     REMOTE_URL = "https://github.com/SunsetWolf/qlib_dataset/releases/download"
@@ -64,7 +67,8 @@ class GetData:
         """
         file_name = str(target_path).rsplit("/", maxsplit=1)[-1]
         resp = requests.get(url, stream=True, timeout=60)
-        resp.raise_for_status()
+        #快速检查http响应代码
+        resp.raise_for_status() 
         if resp.status_code != 200:
             raise requests.exceptions.HTTPError()
 
@@ -75,11 +79,13 @@ class GetData:
         logger.info(f"{os.path.basename(file_name)} downloading......")
         with tqdm(total=int(resp.headers.get("Content-Length", 0))) as p_bar:
             with target_path.open("wb") as fp:
+                # 使用chunk分块下载大文件
                 for chunk in resp.iter_content(chunk_size=chunk_size):
                     fp.write(chunk)
                     p_bar.update(chunk_size)
 
     def download_data(self, file_name: str, target_dir: [Path, str], delete_old: bool = True):
+        # 从url下载数据并且解压缩
         """
         Download the specified file to the target folder.
 
@@ -128,6 +134,7 @@ class GetData:
 
     @staticmethod
     def _unzip(file_path: [Path, str], target_dir: [Path, str], delete_old: bool = True):
+        # 解压文件到指定路径下，同时会删除已经存在的qlib数据库（参数默认）
         file_path = Path(file_path)
         target_dir = Path(target_dir)
         if delete_old:
@@ -138,10 +145,12 @@ class GetData:
         logger.info(f"{file_path} unzipping......")
         with zipfile.ZipFile(str(file_path.resolve()), "r") as zp:
             for _file in tqdm(zp.namelist()):
+                # 在每次循环中，将 ZIP 文件中的一个文件或目录解压缩到 target_dir 指定的目录下
                 zp.extract(_file, str(target_dir.resolve()))
 
     @staticmethod
     def _delete_qlib_data(file_dir: Path):
+        # 删除已经存在的qlib数据库
         rm_dirs = []
         for _name in ["features", "calendars", "instruments", "features_cache", "dataset_cache"]:
             _p = file_dir.joinpath(_name)
@@ -170,6 +179,8 @@ class GetData:
         delete_old=True,
         exists_skip=False,
     ):
+        # 从qlib公开的数据库获取qlib格式的数据
+        # 该数据库有在数据来源上有一定的不可控性
         """download cn qlib data from remote
 
         Parameters
