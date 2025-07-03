@@ -99,7 +99,16 @@ class YahooCollector(BaseCollector):
 
     def init_datetime(self):
         if self.interval == self.INTERVAL_1min:
-            self.start_datetime = max(self.start_datetime, self.DEFAULT_START_DATETIME_1MIN)
+            # 源代码报错两种时间格式不匹配，打印错误内容查看
+            try:
+                try:
+                    self.start_datetime = max(self.start_datetime, self.DEFAULT_START_DATETIME_1MIN)
+                except:
+                    # self.start_datetime = max(self.start_datetime, pd.Timestamp(self.DEFAULT_START_DATETIME_1MIN))
+                    self.start_datetime = max(self.start_datetime.to_pydatetime().date(), self.DEFAULT_START_DATETIME_1MIN)
+            except Exception as e:
+                print(type(self.start_datetime), type(self.DEFAULT_START_DATETIME_1MIN))
+                raise ValueError(e)
         elif self.interval == self.INTERVAL_1d:
             pass
         else:
@@ -114,6 +123,7 @@ class YahooCollector(BaseCollector):
             dt = pd.Timestamp(dt, tz=timezone).timestamp()
             dt = pd.Timestamp(dt, tz=tzlocal(), unit="s")
         except ValueError as e:
+            print('转换日期格式出现问题',e)
             pass
         return dt
 

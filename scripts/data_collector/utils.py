@@ -49,7 +49,7 @@ _EN_FUND_SYMBOLS = None
 _CALENDAR_MAP = {}
 
 # NOTE: Until 2020-10-20 20:00:00
-MINIMUM_SYMBOLS_NUM = 3900
+MINIMUM_SYMBOLS_NUM = 100
 
 
 def get_calendar_list(bench_code="CSI300") -> List[pd.Timestamp]:
@@ -214,9 +214,12 @@ def get_hs_stock_symbols() -> list:
         except Exception as e:
             logger.warning("An error occurred while extracting data from the response.")
             raise
-
-        if len(_symbols) < 3900:
-            raise ValueError("The complete list of stocks is not available.")
+        
+        # # 注释掉了这一行因为可能影响代码的运行
+        # # 用于获取代码的原网页现在只有大概100个股票代码，且全部为深交所上市的股票
+        # if len(_symbols) < 3900:
+        #     print(_symbols[:2], _symbols[-2:])
+        #     raise ValueError(f"The complete list of stocks is not available. length of symbols is {len(_symbols)}")
 
         # Add suffix after the stock code to conform to yahooquery standard, otherwise the data will not be fetched.
         _symbols = [
