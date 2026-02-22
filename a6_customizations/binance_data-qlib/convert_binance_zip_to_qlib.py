@@ -6,7 +6,6 @@ from typing import Iterable, List
 
 import pandas as pd
 from loguru import logger
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_root))
@@ -174,7 +173,7 @@ def _collect_zip_files(source_dir: Path) -> List[Path]:
 
 def build_csv_from_zips(source_dir: Path, output_csv: Path, symbol: str) -> Path:
     """
-    并行读取zip并生成合并后的Parquet文件
+    顺序读取zip并生成合并后的Parquet文件
 
     参数：
         source_dir (Path): zip目录
@@ -189,18 +188,15 @@ def build_csv_from_zips(source_dir: Path, output_csv: Path, symbol: str) -> Path
         raise FileNotFoundError(f"未找到zip文件: {source_dir}")
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     frames = []
-    with ThreadPoolExecutor() as executor:
-        future_map = {executor.submit(_read_zip_csv, zip_path): zip_path for zip_path in zip_files}
-        for future in as_completed(future_map):
-            df = future.result()
-            if df.empty:
-                continue
-            qlib_df = _build_qlib_dataframe(df, symbol)
-            if not qlib_df.empty:
-                frames.append(qlib_df)
+    for zip_path in zip_files:
+        df = _read_zip_csv(zip_path)
+        if df.empty:
+            continue
+        qlib_df = _build_qlib_dataframe(df, symbol)
+        if not qlib_df.empty:
+            frames.append(qlib_df)
     if not frames:
         raise RuntimeError("未生成有效的CSV文件")
-    
     merged = pd.concat(frames, ignore_index=True)
     merged["date"] = pd.to_datetime(merged["date"], errors="coerce")
     merged = merged.dropna(subset=["date"]).sort_values("date")
