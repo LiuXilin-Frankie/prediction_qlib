@@ -200,6 +200,7 @@ def build_csv_from_zips(source_dir: Path, output_csv: Path, symbol: str) -> Path
                 frames.append(qlib_df)
     if not frames:
         raise RuntimeError("未生成有效的CSV文件")
+    
     merged = pd.concat(frames, ignore_index=True)
     merged["date"] = pd.to_datetime(merged["date"], errors="coerce")
     merged = merged.dropna(subset=["date"]).sort_values("date")
