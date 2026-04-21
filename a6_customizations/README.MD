@@ -5,7 +5,7 @@
 交易的规则如下
 + 任意时刻我可以交易事件合约买比特币5分钟后（其实有其它时间可选，但是第一阶段我想专注于五分钟）的涨或者跌，买入的金额最低是5美刀，最高是25美刀。
 + 假如我买入5美刀涨，如果5分钟后合约价格相比我买入时上涨了（无论涨多少都可以），我就可以赚取3.5美刀，也就是70%的收益率；如果5分钟后合约价格相比我买入时下跌了（无论跌多少都可以），我就亏损5美刀，也就是100%的亏损率。
-+ 如果我买跌也是一样，事件合约只在意我买入的事件是否发生，跟涨跌幅度无关。
++ 如果我买跌也是一样，我只能在5分钟后价格真的下跌的情况下获利，其他的情况我都会损失本金。事件合约只在意我买入的事件是否发生，跟涨跌幅度无关。
 + 真正的交易过程中，即使长期看我的胜率很高，赢和亏出现的顺序也很重要，我想要尽量避免长时间连续的亏损，这会迅速消耗掉我所有的资金导致我无法继续交易。
 
 数据详情：
@@ -40,37 +40,14 @@
 
 ```
 
+### a6_customizations 模块文档索引
 
-### 使用Conda设置环境
+按照本项目约定：每个新模块放在 `a6_customizations` 下独立目录，并提供对应 README。
 
-```bash
-cd a6_customizations/
-conda env remove -n prediction_qlib -y
-conda env update --file environment.yml --prune
-conda activate prediction_qlib
-cd ..
-python setup.py install
-```
+- `binance_data-qlib`：Binance 1分钟数据下载、校验、转换为Qlib数据格式  
+  详细文档见：[a6_customizations/binance_data-qlib/README.MD](./binance_data-qlib/README.MD)
 
-### 下载数据
-手动下载一段时间再[分段更新](https://www.wuzao.com/document/qlib/component/data.html#id13)
-```shell
-# 下载1日数据
-python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/cn_data --region cn
-
-# 下载1分钟数据(部分下载)
-python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/qlib_cn_1min --region cn --interval 1min
-# 更新区间数据
-
-# 下载US数据
-python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/us_data --region us
-
-python scripts/data_collector/yahoo/collector.py update_data_to_bin --qlib_data_1d_dir <user data dir> --trading_date <start date> --end_date <end date>
-```
-
-
-
-
-
+- `qlib_btc_5min_baseline`：使用Qlib内置 `Alpha158` 因子与 `LightGBM`，对 `BTCUSDT` 的 `5分钟` 事件合约进行滚动训练、阈值筛选与测试集交易模拟的 baseline 方案  
+  详细文档见：[a6_customizations/qlib_btc_5min_baseline/README.MD](./qlib_btc_5min_baseline/README.MD)
 
 

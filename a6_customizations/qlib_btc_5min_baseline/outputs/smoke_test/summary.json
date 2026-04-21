@@ -1,0 +1,11 @@
+{
+  "n_windows": 1,
+  "n_test_trades": 63,
+  "overall_win_rate": 0.5873015873015873,
+  "overall_avg_pnl": -0.007936507936507936,
+  "overall_total_pnl": -0.5,
+  "overall_max_drawdown": 34.5,
+  "overall_longest_losing_streak": 5,
+  "avg_test_win_rate_by_window": 0.5873015873015873,
+  "avg_test_trades_by_window": 63.0
+}

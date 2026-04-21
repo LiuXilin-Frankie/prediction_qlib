@@ -139,6 +139,12 @@ def _build_qlib_dataframe(df: pd.DataFrame, symbol: str) -> pd.DataFrame:
     taker_buy_quote_volume_col = _pick_column(df, ["taker_buy_quote_volume"], 10)
 
     dt = _parse_datetime(df[time_col])
+    volume = pd.to_numeric(df[volume_col], errors="coerce")
+    quote_volume = pd.to_numeric(df[quote_volume_col], errors="coerce")
+    vwap = quote_volume.div(volume.replace(0, pd.NA))
+    close = pd.to_numeric(df[close_col], errors="coerce")
+    # When volume is zero or missing, fall back to close to avoid invalid VWAP.
+    vwap = vwap.fillna(close)
     out = pd.DataFrame(
         {
             "symbol": symbol,
@@ -146,9 +152,10 @@ def _build_qlib_dataframe(df: pd.DataFrame, symbol: str) -> pd.DataFrame:
             "open": pd.to_numeric(df[open_col], errors="coerce"),
             "high": pd.to_numeric(df[high_col], errors="coerce"),
             "low": pd.to_numeric(df[low_col], errors="coerce"),
-            "close": pd.to_numeric(df[close_col], errors="coerce"),
-            "volume": pd.to_numeric(df[volume_col], errors="coerce"),
-            "quote_volume": pd.to_numeric(df[quote_volume_col], errors="coerce"),
+            "close": close,
+            "volume": volume,
+            "quote_volume": quote_volume,
+            "vwap": vwap,
             "count": pd.to_numeric(df[count_col], errors="coerce"),
             "taker_buy_volume": pd.to_numeric(df[taker_buy_volume_col], errors="coerce"),
             "taker_buy_quote_volume": pd.to_numeric(df[taker_buy_quote_volume_col], errors="coerce"),
@@ -156,6 +163,20 @@ def _build_qlib_dataframe(df: pd.DataFrame, symbol: str) -> pd.DataFrame:
         }
     )
     return out.dropna(subset=["date"])
+
+
+def _ensure_vwap_column(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    if "vwap" in df.columns:
+        df["vwap"] = pd.to_numeric(df["vwap"], errors="coerce")
+        return df
+    if "quote_volume" not in df.columns or "volume" not in df.columns:
+        raise ValueError("Parquet缺少 `quote_volume` 或 `volume`，无法补算 VWAP")
+    df["close"] = pd.to_numeric(df["close"], errors="coerce")
+    df["volume"] = pd.to_numeric(df["volume"], errors="coerce")
+    df["quote_volume"] = pd.to_numeric(df["quote_volume"], errors="coerce")
+    df["vwap"] = df["quote_volume"].div(df["volume"].replace(0, pd.NA)).fillna(df["close"])
+    return df
 
 
 def _collect_zip_files(source_dir: Path) -> List[Path]:
@@ -266,7 +287,7 @@ def dump_qlib(parquet_paths: List[Path], qlib_dir: Path, freq: str, symbols: Lis
         csv_path=str(parquet_paths[0].parent),
         qlib_dir=str(qlib_dir),
         freq=freq,
-        include_fields="open,close,high,low,volume,factor,quote_volume,count,taker_buy_volume,taker_buy_quote_volume",
+        include_fields="open,close,high,low,volume,vwap,factor,quote_volume,count,taker_buy_volume,taker_buy_quote_volume",
         symbol_field_name="symbol",
         date_field_name="date",
     )
@@ -274,7 +295,8 @@ def dump_qlib(parquet_paths: List[Path], qlib_dir: Path, freq: str, symbols: Lis
     dumper.save_calendars(calendars)
     dumper.save_instruments(instruments)
     for parquet_path, symbol in zip(parquet_paths, symbols):
-        df = pd.read_parquet(parquet_path)
+        df = _ensure_vwap_column(pd.read_parquet(parquet_path))
+        df.to_parquet(parquet_path, index=False)
         df["symbol"] = symbol
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
         df = df.dropna(subset=["date"])
@@ -287,6 +309,7 @@ def run(
     qlib_dir: str = "a6_customizations/binance_data-qlib/qlib_data_1min",
     symbols: List[str] = None,
     freq: str = "1min",
+    reuse_existing_parquet: bool = True,
 ) -> None:
     """
     批量转换多个交易对数据到Qlib格式
@@ -297,6 +320,7 @@ def run(
         qlib_dir (str): Qlib输出目录
         symbols (List[str]): 交易对列表
         freq (str): 数据频率
+        reuse_existing_parquet (bool): 若中间Parquet已存在，则直接复用并补算VWAP
     """
     if symbols is None:
         symbols = ["BTCUSDT"]
@@ -305,10 +329,16 @@ def run(
     qlib_path = Path(qlib_dir).expanduser().resolve()
     parquet_paths = []
     for symbol in symbols:
-        symbol_source_path = _resolve_symbol_source_dir(source_path, symbol)
-        logger.info(f"开始转换: {symbol_source_path}")
-        output_parquet = build_csv_from_zips(symbol_source_path, csv_path / f"{symbol}.parquet", symbol)
-        logger.info(f"Parquet已生成: {output_parquet}")
+        output_parquet = csv_path / f"{symbol}.parquet"
+        if reuse_existing_parquet and output_parquet.exists():
+            logger.info(f"复用现有Parquet并补算VWAP: {output_parquet}")
+            df = _ensure_vwap_column(pd.read_parquet(output_parquet))
+            df.to_parquet(output_parquet, index=False)
+        else:
+            symbol_source_path = _resolve_symbol_source_dir(source_path, symbol)
+            logger.info(f"开始转换: {symbol_source_path}")
+            output_parquet = build_csv_from_zips(symbol_source_path, output_parquet, symbol)
+            logger.info(f"Parquet已生成: {output_parquet}")
         parquet_paths.append(output_parquet)
     dump_qlib(parquet_paths, qlib_path, freq, symbols)
     logger.info(f"Qlib数据已生成: {qlib_path}")
@@ -323,6 +353,7 @@ if __name__ == "__main__":
     parser.add_argument("--qlib_dir", default="a6_customizations/binance_data-qlib/qlib_data_1min")
     parser.add_argument("--symbols", default="BTCUSDT,ETHUSDT", help="逗号分隔的多个symbol")
     parser.add_argument("--freq", default="1min")
+    parser.add_argument("--reuse_existing_parquet", action="store_true", default=False)
     args = parser.parse_args()
     symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
 
@@ -332,6 +363,7 @@ if __name__ == "__main__":
         qlib_dir=args.qlib_dir,
         symbols=symbols,
         freq=args.freq,
+        reuse_existing_parquet=args.reuse_existing_parquet,
     )
 
 
