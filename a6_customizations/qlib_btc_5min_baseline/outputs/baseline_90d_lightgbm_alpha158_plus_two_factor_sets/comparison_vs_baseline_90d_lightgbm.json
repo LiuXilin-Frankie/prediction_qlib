@@ -1,0 +1,47 @@
+{
+  "n_windows": {
+    "baseline": 97,
+    "new": 97,
+    "delta_new_minus_baseline": 0
+  },
+  "n_test_trades": {
+    "baseline": 3665,
+    "new": 3487,
+    "delta_new_minus_baseline": -178
+  },
+  "overall_win_rate": {
+    "baseline": 0.5500682128240109,
+    "new": 0.5520504731861199,
+    "delta_new_minus_baseline": 0.001982260362109023
+  },
+  "overall_avg_pnl": {
+    "baseline": -0.32442019099590724,
+    "new": -0.30757097791798105,
+    "delta_new_minus_baseline": 0.016849213077926195
+  },
+  "overall_total_pnl": {
+    "baseline": -1189.0,
+    "new": -1072.5,
+    "delta_new_minus_baseline": 116.5
+  },
+  "overall_max_drawdown": {
+    "baseline": 1205.5,
+    "new": 1185.5,
+    "delta_new_minus_baseline": -20.0
+  },
+  "overall_longest_losing_streak": {
+    "baseline": 11,
+    "new": 10,
+    "delta_new_minus_baseline": -1
+  },
+  "avg_test_win_rate_by_window": {
+    "baseline": 0.5711573412674041,
+    "new": 0.5391442552682688,
+    "delta_new_minus_baseline": -0.03201308599913533
+  },
+  "avg_test_trades_by_window": {
+    "baseline": 37.78350515463917,
+    "new": 35.94845360824742,
+    "delta_new_minus_baseline": -1.8350515463917532
+  }
+}

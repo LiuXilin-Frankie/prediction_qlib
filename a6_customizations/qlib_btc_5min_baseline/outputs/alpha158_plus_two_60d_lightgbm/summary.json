@@ -1,0 +1,17 @@
+{
+  "n_windows": 102,
+  "n_test_trades": 2761,
+  "overall_win_rate": 0.5628395508873597,
+  "overall_avg_pnl": -0.21586381745744296,
+  "overall_total_pnl": -596.0,
+  "overall_max_drawdown": 657.5,
+  "overall_longest_losing_streak": 7,
+  "avg_test_win_rate_by_window": 0.5494446465973846,
+  "avg_test_trades_by_window": 27.068627450980394,
+  "external_factor_panels": [
+    "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_full_v2/factor_panel.parquet",
+    "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_full_btc/factor_panel.parquet"
+  ],
+  "n_external_factor_panels": 2,
+  "n_external_factor_columns": 88
+}

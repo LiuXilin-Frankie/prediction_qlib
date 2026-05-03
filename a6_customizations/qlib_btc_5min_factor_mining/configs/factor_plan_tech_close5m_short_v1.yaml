@@ -1,0 +1,89 @@
+meta:
+  plan_name: tech_factor_plan_close5m_short_v1
+  status: confirmed
+  feature_construction: close_5min_only
+  target:
+    task: binary_direction_short
+    entry_price: t_plus_1_step_open
+    settle_price: t_plus_2_step_open
+    horizon_minutes: 1
+    note: "step means sampled step (sample_minutes=5), not raw minute"
+  objective:
+    primary: improve_short_horizon_winrate
+    secondary: reduce_losing_streak
+    break_even_winrate: 0.5882
+
+global_params:
+  eps: 1.0e-12
+
+factors:
+  - name: ema_gap
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      fast: [3]
+      slow: [8]
+    rationale: "ultra-short trend slope on close-only ladder"
+
+  - name: macd_hist
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      fast: [3]
+      slow: [9]
+      signal: [3]
+    rationale: "short momentum acceleration"
+
+  - name: rsi
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      window: [6]
+    rationale: "short reversal/continuation state"
+
+  - name: roc
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      window: [3]
+    rationale: "short directional speed"
+
+  - name: atr_norm
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [5]
+      normalize_by: close
+    rationale: "close-only volatility proxy"
+
+  - name: realized_vol
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [5]
+      return_type: log_return
+    rationale: "short realized volatility regime"
+
+  - name: bollinger_bandwidth
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [8]
+      n_std: [2.0]
+    rationale: "short compression/expansion detector"
+
+  - name: obv_zscore
+    family: close_path_pressure
+    enabled: true
+    status: proposed
+    params:
+      smooth_window: [5]
+      zscore_window: [13]
+    rationale: "close-only sign-cumsum pressure proxy"

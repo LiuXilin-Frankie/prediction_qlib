@@ -1,0 +1,132 @@
+meta:
+  plan_name: tech_factor_plan_v1
+  status: confirmed
+  target:
+    task: binary_direction
+    entry_price: t_plus_1_open
+    settle_price: t_plus_6_open
+    horizon_minutes: 5
+  objective:
+    primary: improve_high_confidence_winrate
+    secondary: reduce_losing_streak
+    break_even_winrate: 0.5882
+  note: "must_confirm_before_mining"
+
+global_params:
+  short_windows: [3, 5, 8, 13]
+  mid_windows: [21, 34]
+  long_windows: [55]
+  eps: 1.0e-12
+
+factors:
+  - name: ema_gap
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      fast: [5, 8, 13]
+      slow: [21, 34, 55]
+    rationale: "capture short-vs-mid trend slope for 5-minute direction"
+
+  - name: macd_hist
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      fast: [5, 8, 12]
+      slow: [21, 26, 34]
+      signal: [5, 9]
+    rationale: "measure acceleration of momentum shift near turning points"
+
+  - name: rsi
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      window: [6, 9, 14]
+    rationale: "short-horizon overbought/oversold proxy"
+
+  - name: roc
+    family: trend_momentum
+    enabled: true
+    status: proposed
+    params:
+      window: [3, 5, 8, 13]
+    rationale: "pure directional speed for event-contract style label"
+
+  - name: atr_norm
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [5, 8, 14, 21]
+      normalize_by: close
+    rationale: "risk state filter; avoid trading in noisy spikes"
+
+  - name: realized_vol
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [5, 8, 13, 21]
+      return_type: log_return
+    rationale: "micro-regime volatility segmentation for threshold stability"
+
+  - name: bollinger_bandwidth
+    family: volatility
+    enabled: true
+    status: proposed
+    params:
+      window: [13, 21, 34]
+      n_std: [2.0]
+    rationale: "compression/expansion detector before directional break"
+
+  - name: obv_zscore
+    family: volume_price_pressure
+    enabled: true
+    status: proposed
+    params:
+      smooth_window: [13, 21]
+      zscore_window: [34, 55]
+    rationale: "volume-pressure imbalance with normalization"
+
+  - name: mfi
+    family: volume_price_pressure
+    enabled: true
+    status: proposed
+    params:
+      window: [8, 14, 21]
+    rationale: "price-volume flow quality beyond raw volume"
+
+  - name: cmf
+    family: volume_price_pressure
+    enabled: true
+    status: proposed
+    params:
+      window: [10, 20, 34]
+    rationale: "close location weighted by volume for accumulation/distribution"
+
+  - name: taker_buy_ratio
+    family: volume_price_pressure
+    enabled: true
+    status: proposed
+    params:
+      smooth_window: [3, 5, 8, 13]
+      fields:
+        - taker_buy_base_volume
+        - volume
+    rationale: "aggressive buy pressure proxy for short horizon direction"
+
+  - name: candle_microstructure
+    family: microstructure_proxy
+    enabled: true
+    status: proposed
+    params:
+      include:
+        - high_low_range_norm
+        - body_to_range
+        - upper_shadow_ratio
+        - lower_shadow_ratio
+        - close_location_value
+      smooth_window: [3, 5, 8]
+    rationale: "capture intrabar shape signal linked to immediate continuation/reversal"

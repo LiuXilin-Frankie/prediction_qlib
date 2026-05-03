@@ -58,6 +58,24 @@ def parse_args():
         default="a6_customizations/qlib_btc_5min_baseline/outputs/latest",
         help="Directory to save metrics and trade logs",
     )
+    parser.add_argument(
+        "--external-factor-panel",
+        action="append",
+        default=[],
+        help="Optional parquet factor panel path. Can be provided multiple times.",
+    )
+    parser.add_argument(
+        "--train-low-abs-quantile",
+        type=float,
+        default=0.0,
+        help="If > 0, identify lowest abs(future_return) quantile in train and apply random dropping on that bucket.",
+    )
+    parser.add_argument(
+        "--train-low-abs-drop-fraction",
+        type=float,
+        default=0.0,
+        help="Randomly drop this fraction from train samples in the low-abs bucket.",
+    )
     return parser.parse_args()
 
 
@@ -79,6 +97,9 @@ def main():
         experiment_start=args.experiment_start,
         experiment_end=args.experiment_end,
         output_dir=str(output_dir),
+        external_factor_panels=args.external_factor_panel,
+        train_low_abs_quantile=args.train_low_abs_quantile,
+        train_low_abs_drop_fraction=args.train_low_abs_drop_fraction,
     )
     summary = run_walk_forward(config)
     print(json.dumps(summary, indent=2, ensure_ascii=False, default=str))

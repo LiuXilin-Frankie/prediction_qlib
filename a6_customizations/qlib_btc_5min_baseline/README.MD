@@ -150,3 +150,21 @@ python a6_customizations/qlib_btc_5min_baseline/train_walk_forward.py \
 
 - 训练入口会自动预加载系统 `libstdc++.so.6`，修复本地 `LightGBM` 运行时依赖问题
 - 输出目录包含 `summary.json`、`window_metrics.csv`、`trade_log.csv`
+
+## 实验对比结论表（更新）
+
+下表汇总了近期关键实验，包含 `Alpha158`、`Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1`、训练窗口变化（`90d/60d`）以及“训练集低振幅随机删样”测试。
+
+> 说明：删样仅作用于训练集，不影响验证和测试集。
+
+| 因子配置 | 测试集窗口 | 是否删样 | total_pnl | avg_pnl | win_rate | max_dd | 最大连亏 | 对 baseline(total_pnl=-1189) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| Alpha158 | 90d | 否 | -1189.0 | -0.3244 | 0.5501 | 1205.5 | 11 | 0 |
+| Alpha158 | 60d | 否 | -835.5 | -0.3497 | 0.5471 | 884.0 | 9 | +353.5 |
+| Alpha158 | 90d | 是（q40_drop50） | -1526.5 | -0.3635 | 0.5455 | 1585.5 | 7 | -337.5 |
+| Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1 | 90d | 否 | -1072.5 | -0.3076 | 0.5521 | 1185.5 | 10 | +116.5 |
+| Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1 | 60d | 否 | **-596.0** | **-0.2159** | **0.5628** | **657.5** | **7** | **+593.0** |
+| Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1 | 90d | 是（q40_drop50） | -833.0 | -0.2917 | 0.5539 | 878.0 | 10 | +356.0 |
+| Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1 | 60d | 是（q40_drop50） | -986.0 | -0.3537 | 0.5466 | 1012.5 | 9 | +203.0 |
+
+当前最优配置为：`Alpha158 + factor_plan_tech_v1 + factor_plan_tech_close5m_short_v1 + 60d`。

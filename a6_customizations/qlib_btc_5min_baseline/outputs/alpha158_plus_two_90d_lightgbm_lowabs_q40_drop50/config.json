@@ -1,0 +1,31 @@
+{
+  "provider_uri": "a6_customizations/binance_data-qlib/qlib_data_1min",
+  "instrument": "BTCUSDT",
+  "freq": "1min",
+  "model_type": "lightgbm",
+  "train_days": 90,
+  "valid_days": 7,
+  "test_days": 7,
+  "retrain_days": 7,
+  "sample_minutes": 5,
+  "entry_offset_minutes": 1,
+  "horizon_minutes": 5,
+  "flat_epsilon": 1e-12,
+  "min_valid_trades": 5,
+  "threshold_start": 0.55,
+  "threshold_end": 0.8,
+  "threshold_step": 0.01,
+  "payout_win": 3.5,
+  "payout_loss": 5.0,
+  "random_state": 42,
+  "experiment_start": null,
+  "experiment_end": null,
+  "output_dir": "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_baseline/outputs/alpha158_plus_two_90d_lightgbm_lowabs_q40_drop50",
+  "model_params": null,
+  "external_factor_panels": [
+    "a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_full_v2/factor_panel.parquet",
+    "a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_full_btc/factor_panel.parquet"
+  ],
+  "train_low_abs_quantile": 0.4,
+  "train_low_abs_drop_fraction": 0.5
+}

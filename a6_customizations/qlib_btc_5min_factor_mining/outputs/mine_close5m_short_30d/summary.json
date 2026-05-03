@@ -1,0 +1,130 @@
+{
+  "config": {
+    "plan_path": "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_tech_close5m_short_v1.yaml",
+    "provider_uri": "a6_customizations/binance_data-qlib/qlib_data_1min",
+    "instrument": "ALL",
+    "freq": "1min",
+    "entry_offset_minutes": 1,
+    "horizon_minutes": 1,
+    "sample_minutes": 5,
+    "lookback_days": 30,
+    "output_dir": "a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_30d",
+    "eval_quantile": 0.2,
+    "min_samples_per_factor": 500,
+    "eps": 1e-12
+  },
+  "plan_name": "tech_factor_plan_close5m_short_v1",
+  "status": "confirmed",
+  "n_instruments": 6,
+  "instruments": [
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "n_rows": 51828,
+  "n_factor_columns": 8,
+  "n_ranked_factors": 8,
+  "n_ranked_factors_by_instrument": 48,
+  "top10": [
+    {
+      "factor": "ema_gap_f3_s8",
+      "samples": 51786,
+      "sign": -1,
+      "auc_best": 0.532459509842828,
+      "long_tail_n": 10358,
+      "long_tail_winrate": 0.5341764819463217,
+      "short_tail_n": 10358,
+      "short_tail_winrate": 0.5485614983587566,
+      "best_tail_winrate": 0.5485614983587566,
+      "edge_vs_break_even": -0.039638501641243384
+    },
+    {
+      "factor": "rsi_6",
+      "samples": 51792,
+      "sign": -1,
+      "auc_best": 0.5323472058654549,
+      "long_tail_n": 10359,
+      "long_tail_winrate": 0.529491263635486,
+      "short_tail_n": 10359,
+      "short_tail_winrate": 0.546770923834347,
+      "best_tail_winrate": 0.546770923834347,
+      "edge_vs_break_even": -0.041429076165652945
+    },
+    {
+      "factor": "roc_3",
+      "samples": 51810,
+      "sign": -1,
+      "auc_best": 0.5296200170377082,
+      "long_tail_n": 10362,
+      "long_tail_winrate": 0.5235475776877051,
+      "short_tail_n": 10363,
+      "short_tail_winrate": 0.5424104988902827,
+      "best_tail_winrate": 0.5424104988902827,
+      "edge_vs_break_even": -0.045789501109717246
+    },
+    {
+      "factor": "obv_z_sw5_zw13",
+      "samples": 51732,
+      "sign": -1,
+      "auc_best": 0.518911134115469,
+      "long_tail_n": 10347,
+      "long_tail_winrate": 0.5140620469701362,
+      "short_tail_n": 10347,
+      "short_tail_winrate": 0.5411230308301923,
+      "best_tail_winrate": 0.5411230308301923,
+      "edge_vs_break_even": -0.047076969169807636
+    },
+    {
+      "factor": "macd_hist_f3_s9_sig3",
+      "samples": 51768,
+      "sign": -1,
+      "auc_best": 0.5196637367461414,
+      "long_tail_n": 10354,
+      "long_tail_winrate": 0.5150666409117249,
+      "short_tail_n": 10354,
+      "short_tail_winrate": 0.5292640525400811,
+      "best_tail_winrate": 0.5292640525400811,
+      "edge_vs_break_even": -0.058935947459918814
+    },
+    {
+      "factor": "realized_vol_5",
+      "samples": 51798,
+      "sign": 1,
+      "auc_best": 0.5092359525594066,
+      "long_tail_n": 10360,
+      "long_tail_winrate": 0.49295366795366796,
+      "short_tail_n": 10360,
+      "short_tail_winrate": 0.525,
+      "best_tail_winrate": 0.525,
+      "edge_vs_break_even": -0.06319999999999992
+    },
+    {
+      "factor": "atr_norm_5",
+      "samples": 51798,
+      "sign": 1,
+      "auc_best": 0.5083608812757006,
+      "long_tail_n": 10360,
+      "long_tail_winrate": 0.4911196911196911,
+      "short_tail_n": 10360,
+      "short_tail_winrate": 0.5217181467181468,
+      "best_tail_winrate": 0.5217181467181468,
+      "edge_vs_break_even": -0.06648185328185319
+    },
+    {
+      "factor": "bb_width_8_n2",
+      "samples": 51786,
+      "sign": 1,
+      "auc_best": 0.5067562187442097,
+      "long_tail_n": 10358,
+      "long_tail_winrate": 0.493241938598185,
+      "short_tail_n": 10358,
+      "short_tail_winrate": 0.5185363969878355,
+      "best_tail_winrate": 0.5185363969878355,
+      "edge_vs_break_even": -0.06966360301216445
+    }
+  ],
+  "output_dir": "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_30d"
+}

@@ -52,6 +52,9 @@ class BaselineConfig:
     experiment_end: Optional[str] = None
     output_dir: str = "a6_customizations/qlib_btc_5min_baseline/outputs/latest"
     model_params: Optional[Dict] = None
+    external_factor_panels: Optional[List[str]] = None
+    train_low_abs_quantile: float = 0.0
+    train_low_abs_drop_fraction: float = 0.0
 
     def resolved_model_params(self, backend: str) -> Dict:
         if backend == "lightgbm":
@@ -202,6 +205,98 @@ def prepare_segment(
     if drop_flat:
         df = df.loc[~df["is_flat"]].copy()
     return df
+
+
+def _sanitize_panel_name(path: str) -> str:
+    return Path(path).stem.replace(".", "_").replace("-", "_")
+
+
+def load_external_factor_frames(panel_paths: Optional[List[str]], instrument: str) -> List[Tuple[str, pd.DataFrame]]:
+    if not panel_paths:
+        return []
+
+    external_frames: List[Tuple[str, pd.DataFrame]] = []
+    for idx, panel_path in enumerate(panel_paths):
+        panel_file = Path(panel_path).resolve()
+        if not panel_file.exists():
+            raise FileNotFoundError(f"External factor panel not found: {panel_file}")
+
+        panel_df = pd.read_parquet(panel_file)
+        if "datetime" not in panel_df.columns:
+            raise ValueError(f"Panel missing 'datetime' column: {panel_file}")
+
+        if "instrument" in panel_df.columns:
+            panel_df = panel_df.loc[panel_df["instrument"] == instrument].copy()
+
+        factor_cols = [
+            col
+            for col in panel_df.columns
+            if col not in {"instrument", "datetime", "future_return", "target"}
+        ]
+        if not factor_cols:
+            continue
+
+        frame = panel_df[["datetime"] + factor_cols].copy()
+        frame["datetime"] = pd.to_datetime(frame["datetime"])
+        frame = frame.drop_duplicates(subset=["datetime"], keep="last").set_index("datetime").sort_index()
+        frame = frame.replace([np.inf, -np.inf], np.nan)
+
+        prefix = f"ext{idx+1}_{_sanitize_panel_name(panel_path)}"
+        frame = frame.rename(columns={col: f"{prefix}__{col}" for col in factor_cols})
+        external_frames.append((prefix, frame))
+
+    return external_frames
+
+
+def augment_with_external_factors(
+    segment_df: pd.DataFrame,
+    external_frames: List[Tuple[str, pd.DataFrame]],
+) -> pd.DataFrame:
+    if segment_df.empty or not external_frames:
+        return segment_df
+
+    out = segment_df.copy()
+    dt_index = pd.to_datetime(_get_datetime_level(out.index))
+    for _, ext_frame in external_frames:
+        aligned = ext_frame.reindex(dt_index)
+        for col in aligned.columns:
+            out[col] = aligned[col].to_numpy()
+    return out
+
+
+def maybe_random_drop_low_abs_train_samples(
+    train_df: pd.DataFrame,
+    low_abs_quantile: float,
+    drop_fraction: float,
+) -> pd.DataFrame:
+    if train_df.empty:
+        return train_df
+    if low_abs_quantile <= 0.0 or drop_fraction <= 0.0:
+        return train_df
+
+    q = float(np.clip(low_abs_quantile, 0.0, 1.0))
+    frac = float(np.clip(drop_fraction, 0.0, 1.0))
+    if q == 0.0 or frac == 0.0:
+        return train_df
+
+    abs_ret = train_df["future_return"].abs()
+    threshold = float(abs_ret.quantile(q))
+    low_abs_idx = train_df.index[abs_ret <= threshold]
+    n_low = len(low_abs_idx)
+    if n_low == 0:
+        return train_df
+
+    n_drop = int(n_low * frac)
+    if n_drop <= 0:
+        return train_df
+    if n_drop >= n_low:
+        n_drop = n_low - 1
+    if n_drop <= 0:
+        return train_df
+
+    drop_idx = np.random.choice(np.arange(n_low), size=n_drop, replace=False)
+    drop_labels = low_abs_idx[drop_idx]
+    return train_df.drop(index=drop_labels)
 
 
 def generate_rolling_windows(
@@ -477,11 +572,27 @@ def train_model(
     raise RuntimeError(f"All candidate model backends failed: {errors}")
 
 
-def run_single_window(config: BaselineConfig, window: Dict) -> Tuple[Dict, pd.DataFrame]:
+def run_single_window(
+    config: BaselineConfig,
+    window: Dict,
+    external_frames: Optional[List[Tuple[str, pd.DataFrame]]] = None,
+) -> Tuple[Dict, pd.DataFrame]:
     dataset = build_dataset(config, window["train"], window["valid"], window["test"])
     train_df = prepare_segment(dataset, "train", config.sample_minutes, config.flat_epsilon, drop_flat=True)
     valid_df = prepare_segment(dataset, "valid", config.sample_minutes, config.flat_epsilon, drop_flat=False)
     test_df = prepare_segment(dataset, "test", config.sample_minutes, config.flat_epsilon, drop_flat=False)
+
+    if external_frames:
+        train_df = augment_with_external_factors(train_df, external_frames)
+        valid_df = augment_with_external_factors(valid_df, external_frames)
+        test_df = augment_with_external_factors(test_df, external_frames)
+
+    # Optional augmentation for training only: randomly drop part of low-abs-return samples.
+    train_df = maybe_random_drop_low_abs_train_samples(
+        train_df,
+        low_abs_quantile=config.train_low_abs_quantile,
+        drop_fraction=config.train_low_abs_drop_fraction,
+    )
 
     if train_df.empty or valid_df.empty or test_df.empty:
         raise ValueError(f"Window {window['window_id']} has empty segment after preparation.")
@@ -581,11 +692,13 @@ def run_walk_forward(config: BaselineConfig) -> Dict:
     if not windows:
         raise ValueError("No rolling windows generated. Please check the date range and window sizes.")
 
+    external_frames = load_external_factor_frames(config.external_factor_panels, config.instrument)
+
     metrics_records = []
     trade_logs = []
 
     for window in windows:
-        metrics, trade_df = run_single_window(config, window)
+        metrics, trade_df = run_single_window(config, window, external_frames=external_frames)
         metrics_records.append(metrics)
         if not trade_df.empty:
             trade_logs.append(trade_df)
@@ -593,6 +706,9 @@ def run_walk_forward(config: BaselineConfig) -> Dict:
     window_metrics_df = pd.DataFrame(metrics_records)
     trade_log_df = pd.concat(trade_logs, ignore_index=True) if trade_logs else pd.DataFrame()
     summary = summarize_results(window_metrics_df, trade_log_df)
+    summary["external_factor_panels"] = [str(Path(p).resolve()) for p in (config.external_factor_panels or [])]
+    summary["n_external_factor_panels"] = int(len(config.external_factor_panels or []))
+    summary["n_external_factor_columns"] = int(sum(frame.shape[1] for _, frame in external_frames))
     output_dir = save_results(config, window_metrics_df, trade_log_df, summary)
     summary["output_dir"] = str(output_dir)
     return summary

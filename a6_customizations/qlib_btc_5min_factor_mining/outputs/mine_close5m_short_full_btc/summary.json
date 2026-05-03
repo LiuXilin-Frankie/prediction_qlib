@@ -1,0 +1,125 @@
+{
+  "config": {
+    "plan_path": "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_tech_close5m_short_v1.yaml",
+    "provider_uri": "a6_customizations/binance_data-qlib/qlib_data_1min",
+    "instrument": "BTCUSDT",
+    "freq": "1min",
+    "entry_offset_minutes": 1,
+    "horizon_minutes": 1,
+    "sample_minutes": 5,
+    "lookback_days": 0,
+    "output_dir": "a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_full_btc",
+    "eval_quantile": 0.2,
+    "min_samples_per_factor": 500,
+    "eps": 1e-12
+  },
+  "plan_name": "tech_factor_plan_close5m_short_v1",
+  "status": "confirmed",
+  "n_instruments": 1,
+  "instruments": [
+    "BTCUSDT"
+  ],
+  "n_rows": 225502,
+  "n_factor_columns": 8,
+  "n_ranked_factors": 8,
+  "n_ranked_factors_by_instrument": 8,
+  "top10": [
+    {
+      "factor": "rsi_6",
+      "samples": 225496,
+      "sign": -1,
+      "auc_best": 0.5247034914620688,
+      "long_tail_n": 45100,
+      "long_tail_winrate": 0.5287139689578714,
+      "short_tail_n": 45100,
+      "short_tail_winrate": 0.5327050997782705,
+      "best_tail_winrate": 0.5327050997782705,
+      "edge_vs_break_even": -0.055494900221729426
+    },
+    {
+      "factor": "ema_gap_f3_s8",
+      "samples": 225495,
+      "sign": -1,
+      "auc_best": 0.5219515261976767,
+      "long_tail_n": 45099,
+      "long_tail_winrate": 0.525444023149072,
+      "short_tail_n": 45099,
+      "short_tail_winrate": 0.5266192155036697,
+      "best_tail_winrate": 0.5266192155036697,
+      "edge_vs_break_even": -0.0615807844963302
+    },
+    {
+      "factor": "roc_3",
+      "samples": 225499,
+      "sign": -1,
+      "auc_best": 0.5185459666163137,
+      "long_tail_n": 45102,
+      "long_tail_winrate": 0.5231697042259766,
+      "short_tail_n": 45103,
+      "short_tail_winrate": 0.5216504445380573,
+      "best_tail_winrate": 0.5231697042259766,
+      "edge_vs_break_even": -0.0650302957740233
+    },
+    {
+      "factor": "obv_z_sw5_zw13",
+      "samples": 225486,
+      "sign": -1,
+      "auc_best": 0.5145726367445221,
+      "long_tail_n": 45098,
+      "long_tail_winrate": 0.5162756663266663,
+      "short_tail_n": 45098,
+      "short_tail_winrate": 0.5197126258370659,
+      "best_tail_winrate": 0.5197126258370659,
+      "edge_vs_break_even": -0.06848737416293404
+    },
+    {
+      "factor": "macd_hist_f3_s9_sig3",
+      "samples": 225492,
+      "sign": -1,
+      "auc_best": 0.5136854573967832,
+      "long_tail_n": 45099,
+      "long_tail_winrate": 0.5173950641921107,
+      "short_tail_n": 45099,
+      "short_tail_winrate": 0.514778598195082,
+      "best_tail_winrate": 0.5173950641921107,
+      "edge_vs_break_even": -0.07080493580788927
+    },
+    {
+      "factor": "atr_norm_5",
+      "samples": 225497,
+      "sign": 1,
+      "auc_best": 0.5035801004759927,
+      "long_tail_n": 45100,
+      "long_tail_winrate": 0.5060532150776054,
+      "short_tail_n": 45100,
+      "short_tail_winrate": 0.5029490022172949,
+      "best_tail_winrate": 0.5060532150776054,
+      "edge_vs_break_even": -0.08214678492239458
+    },
+    {
+      "factor": "realized_vol_5",
+      "samples": 225497,
+      "sign": 1,
+      "auc_best": 0.5038685199544076,
+      "long_tail_n": 45100,
+      "long_tail_winrate": 0.5052771618625277,
+      "short_tail_n": 45100,
+      "short_tail_winrate": 0.5034368070953437,
+      "best_tail_winrate": 0.5052771618625277,
+      "edge_vs_break_even": -0.08292283813747225
+    },
+    {
+      "factor": "bb_width_8_n2",
+      "samples": 225495,
+      "sign": 1,
+      "auc_best": 0.5029836365343484,
+      "long_tail_n": 45099,
+      "long_tail_winrate": 0.5020732167010356,
+      "short_tail_n": 45099,
+      "short_tail_winrate": 0.5028271136832302,
+      "best_tail_winrate": 0.5028271136832302,
+      "edge_vs_break_even": -0.08537288631676976
+    }
+  ],
+  "output_dir": "/home/absolutex/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_close5m_short_full_btc"
+}
