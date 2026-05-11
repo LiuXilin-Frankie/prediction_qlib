@@ -1,0 +1,18 @@
+name: binance_1min_6symbols_official
+symbols:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+  - XRPUSDT
+  - BNBUSDT
+  - DOGEUSDT
+source_dir: binance_data_1min
+csv_dir: csv_data_1min
+qlib_dir: qlib_data_1min
+manifest_dir: manifests/official_1min_6symbols
+start_date: "2024-01-01"
+publish_lag_days: 2
+freq: 1min
+overwrite_mode: false
+reuse_existing_parquet: false
+enable_logging: false

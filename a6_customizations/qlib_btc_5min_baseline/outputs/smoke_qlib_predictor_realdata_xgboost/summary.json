@@ -1,0 +1,14 @@
+{
+  "n_windows": 1,
+  "n_test_trades": 553,
+  "overall_win_rate": 0.5316455696202531,
+  "overall_avg_pnl": -0.4810126582278481,
+  "overall_total_pnl": -266.0,
+  "overall_max_drawdown": 283.0,
+  "overall_longest_losing_streak": 8,
+  "avg_test_win_rate_by_window": 0.5316455696202531,
+  "avg_test_trades_by_window": 553.0,
+  "external_factor_panels": [],
+  "n_external_factor_panels": 0,
+  "n_external_factor_columns": 0
+}

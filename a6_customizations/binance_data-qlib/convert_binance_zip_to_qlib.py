@@ -1,15 +1,25 @@
+from __future__ import annotations
+
 import io
 import sys
 import zipfile
 from pathlib import Path
 from typing import Iterable, List
 
+import numpy as np
 import pandas as pd
 from loguru import logger
 
 project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from data_contract import (
+    OFFICIAL_SYMBOLS,
+    ensure_partial_output_isolated,
+    normalize_symbols,
+    validate_symbol_directories,
+)
 from scripts.dump_bin import DumpDataAll
 
 
@@ -141,7 +151,7 @@ def _build_qlib_dataframe(df: pd.DataFrame, symbol: str) -> pd.DataFrame:
     dt = _parse_datetime(df[time_col])
     volume = pd.to_numeric(df[volume_col], errors="coerce")
     quote_volume = pd.to_numeric(df[quote_volume_col], errors="coerce")
-    vwap = quote_volume.div(volume.replace(0, pd.NA))
+    vwap = quote_volume.div(volume.replace(0, np.nan))
     close = pd.to_numeric(df[close_col], errors="coerce")
     # When volume is zero or missing, fall back to close to avoid invalid VWAP.
     vwap = vwap.fillna(close)
@@ -175,9 +185,8 @@ def _ensure_vwap_column(df: pd.DataFrame) -> pd.DataFrame:
     df["close"] = pd.to_numeric(df["close"], errors="coerce")
     df["volume"] = pd.to_numeric(df["volume"], errors="coerce")
     df["quote_volume"] = pd.to_numeric(df["quote_volume"], errors="coerce")
-    df["vwap"] = df["quote_volume"].div(df["volume"].replace(0, pd.NA)).fillna(df["close"])
+    df["vwap"] = df["quote_volume"].div(df["volume"].replace(0, np.nan)).fillna(df["close"])
     return df
-
 
 def _collect_zip_files(source_dir: Path) -> List[Path]:
     """
@@ -238,7 +247,9 @@ def _resolve_symbol_source_dir(base_dir: Path, symbol: str) -> Path:
         Path: 最终使用的数据目录
     """
     candidate = base_dir / symbol
-    return candidate if candidate.exists() else base_dir
+    if not candidate.exists():
+        raise FileNotFoundError(f"未找到 symbol 目录: {candidate}")
+    return candidate
 
 
 def _collect_calendar_and_instruments(
@@ -310,7 +321,7 @@ def run(
     symbols: List[str] = None,
     freq: str = "1min",
     reuse_existing_parquet: bool = True,
-) -> None:
+) -> dict[str, object]:
     """
     批量转换多个交易对数据到Qlib格式
 
@@ -322,11 +333,12 @@ def run(
         freq (str): 数据频率
         reuse_existing_parquet (bool): 若中间Parquet已存在，则直接复用并补算VWAP
     """
-    if symbols is None:
-        symbols = ["BTCUSDT"]
     source_path = Path(source_dir).expanduser().resolve()
     csv_path = Path(csv_dir).expanduser().resolve()
     qlib_path = Path(qlib_dir).expanduser().resolve()
+    symbols = normalize_symbols(symbols)
+    ensure_partial_output_isolated(csv_path, qlib_path, symbols)
+    validate_symbol_directories(source_path, symbols)
     parquet_paths = []
     for symbol in symbols:
         output_parquet = csv_path / f"{symbol}.parquet"
@@ -342,6 +354,15 @@ def run(
         parquet_paths.append(output_parquet)
     dump_qlib(parquet_paths, qlib_path, freq, symbols)
     logger.info(f"Qlib数据已生成: {qlib_path}")
+    return {
+        "symbols": symbols,
+        "source_dir": str(source_path),
+        "csv_dir": str(csv_path),
+        "qlib_dir": str(qlib_path),
+        "freq": freq,
+        "reuse_existing_parquet": reuse_existing_parquet,
+        "parquet_paths": [str(path) for path in parquet_paths],
+    }
 
 
 if __name__ == "__main__":
@@ -351,7 +372,11 @@ if __name__ == "__main__":
     parser.add_argument("--source_dir", default="a6_customizations/binance_data-qlib/binance_data_1min")
     parser.add_argument("--csv_dir", default="a6_customizations/binance_data-qlib/csv_data_1min")
     parser.add_argument("--qlib_dir", default="a6_customizations/binance_data-qlib/qlib_data_1min")
-    parser.add_argument("--symbols", default="BTCUSDT,ETHUSDT", help="逗号分隔的多个symbol")
+    parser.add_argument(
+        "--symbols",
+        default="BTCUSDT,ETHUSDT,SOLUSDT,XRPUSDT,BNBUSDT,DOGEUSDT",
+        help="逗号分隔的多个symbol；正式 qlib_data_1min 约定为固定 6-symbol",
+    )
     parser.add_argument("--freq", default="1min")
     parser.add_argument("--reuse_existing_parquet", action="store_true", default=False)
     args = parser.parse_args()

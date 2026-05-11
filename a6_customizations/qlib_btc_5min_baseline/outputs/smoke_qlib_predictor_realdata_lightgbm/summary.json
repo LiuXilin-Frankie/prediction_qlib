@@ -1,0 +1,14 @@
+{
+  "n_windows": 1,
+  "n_test_trades": 0,
+  "overall_win_rate": NaN,
+  "overall_avg_pnl": 0.0,
+  "overall_total_pnl": 0.0,
+  "overall_max_drawdown": 0.0,
+  "overall_longest_losing_streak": 0,
+  "avg_test_win_rate_by_window": NaN,
+  "avg_test_trades_by_window": 0.0,
+  "external_factor_panels": [],
+  "n_external_factor_panels": 0,
+  "n_external_factor_columns": 0
+}

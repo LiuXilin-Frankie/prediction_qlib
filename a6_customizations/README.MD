@@ -26,6 +26,7 @@
 
 项目要求：
 + 项目目前基于qlib的框架进行
++ 代码运行要求使用conda创建的环境，环境名称统一为 `qlib_predictor`
 + 每当进行一个新的模块/添加功能。请你把新的代码添加到“a6_customizations”路径下，创建一个新的文件夹。并在文件夹中创建对应的readme进行说明。这里添加一段简单的说明并且链接到对应的readme详细说明中。
 
 
@@ -44,7 +45,10 @@
 
 按照本项目约定：每个新模块放在 `a6_customizations` 下独立目录，并提供对应 README。
 
-- `binance_data-qlib`：Binance 1分钟数据下载、校验、转换为Qlib数据格式  
+- `qlib_predictor_environment`：统一的 `qlib_predictor` Conda 环境、editable 安装脚本与各子模块 smoke test  
+  详细文档见：[a6_customizations/qlib_predictor_environment/README.MD](./qlib_predictor_environment/README.MD)
+
+- `binance_data-qlib`：Binance 1分钟数据下载、校验、转换为Qlib数据格式，现已标准化为 `config + CLI + manifest + contract check` 的流水线  
   详细文档见：[a6_customizations/binance_data-qlib/README.MD](./binance_data-qlib/README.MD)
 
 - `qlib_btc_5min_baseline`：使用Qlib内置 `Alpha158` 因子与 `LightGBM`，对 `BTCUSDT` 的 `5分钟` 事件合约进行滚动训练、阈值筛选与测试集交易模拟的 baseline 方案  

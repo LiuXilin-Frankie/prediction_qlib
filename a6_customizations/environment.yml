@@ -1,29 +1,44 @@
-name: prediction_qlib
+name: qlib_predictor
 channels:
-  # 优先使用清华镜像源
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r/
-  # 原始通道（备用，若清华源缺失）
   - conda-forge
   - defaults
-
 dependencies:
   - python=3.9
-  - pandas>=1.3.0
-  - numpy>=1.20.0
-  - matplotlib>=3.4.0
-  - seaborn>=0.11.0
-  - scikit-learn>=1.0.0
-  - lightgbm>=3.3.0
-  - joblib>=1.1.0
-  - jupyter
+  - pip>=23.3,<24.1
+  - setuptools>=68
+  - wheel
+  - cython
+  - numpy>=1.24,<2.0
+  - pandas>=2.0,<2.3
   - scipy
+  - scikit-learn
+  - statsmodels
+  - joblib>=1.1,<1.4
+  - pyarrow
+  - pyyaml
+  - ruamel.yaml>=0.17.38
+  - requests
+  - tqdm
+  - loguru
+  - fire
+  - filelock>=3.16.0
+  - redis-py
+  - pymongo
+  - dill
+  - mlflow
+  - sqlalchemy<2
+  - flask<3
+  - werkzeug<3
+  - lightgbm
+  - xgboost
+  - cvxpy
+  - matplotlib
+  - seaborn
+  - plotly
   - mplfinance
   - ta-lib
-  - plotly
-  - fire
+  - jupyter
+  - nbconvert
+  - ipykernel
   - pip:
-    # 为pip包也添加清华源
-    - --index-url https://pypi.tuna.tsinghua.edu.cn/simple
-    - -r requirements.txt
+      - -r a6_customizations/requirements.txt

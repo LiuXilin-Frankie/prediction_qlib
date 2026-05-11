@@ -134,6 +134,11 @@ python a6_customizations/binance_data-qlib/convert_binance_zip_to_qlib.py \
   --reuse_existing_parquet
 ```
 
+说明：
+
+- 这里使用的是正式 6-symbol `qlib_data_1min` 共享底层数据。
+- baseline 训练本身仍然只交易 `BTCUSDT`，但不要用局部 `--symbols BTCUSDT` 去覆盖正式 `qlib_data_1min`。
+
 正式 baseline 命令：
 
 ```bash

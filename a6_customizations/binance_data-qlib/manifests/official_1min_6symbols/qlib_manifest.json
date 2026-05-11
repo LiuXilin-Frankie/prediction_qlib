@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-05-10T14:41:33Z",
+  "pipeline": "binance_1min_6symbols_official",
+  "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/qlib_data_1min",
+  "qlib_symbols": [
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "feature_symbols": [
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "unexpected_in_qlib": [],
+  "qlib_instrument_details": {
+    "BTCUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    },
+    "ETHUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    },
+    "SOLUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    },
+    "XRPUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    },
+    "BNBUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    },
+    "DOGEUSDT": {
+      "start": "2024-01-01 00:00:00",
+      "end": "2026-05-08 23:59:00"
+    }
+  },
+  "calendar_rows": 1236960,
+  "calendar_end": "2026-05-08 23:59:00",
+  "missing_feature_fields": [],
+  "convert_summary": {
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "XRPUSDT",
+      "BNBUSDT",
+      "DOGEUSDT"
+    ],
+    "source_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min",
+    "csv_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min",
+    "qlib_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/qlib_data_1min",
+    "freq": "1min",
+    "reuse_existing_parquet": false,
+    "parquet_paths": [
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/BTCUSDT.parquet",
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/ETHUSDT.parquet",
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/SOLUSDT.parquet",
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/XRPUSDT.parquet",
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/BNBUSDT.parquet",
+      "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/DOGEUSDT.parquet"
+    ]
+  }
+}

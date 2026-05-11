@@ -1,0 +1,149 @@
+{
+  "config": {
+    "plan_path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_tech_v1.yaml",
+    "provider_uri": "a6_customizations/binance_data-qlib/qlib_data_1min",
+    "instrument": "BTCUSDT",
+    "freq": "1min",
+    "entry_offset_minutes": 1,
+    "horizon_minutes": 5,
+    "sample_minutes": 5,
+    "lookback_days": 3,
+    "output_dir": "a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_qlib_predictor_mine_3d",
+    "eval_quantile": 0.2,
+    "min_samples_per_factor": 500,
+    "eps": 1e-12
+  },
+  "plan_name": "tech_factor_plan_v1",
+  "status": "confirmed",
+  "n_instruments": 1,
+  "instruments": [
+    "BTCUSDT"
+  ],
+  "n_rows": 858,
+  "n_factor_columns": 80,
+  "n_ranked_factors": 80,
+  "n_ranked_factors_by_instrument": 80,
+  "top10": [
+    {
+      "factor": "taker_buy_ratio_8",
+      "samples": 851,
+      "sign": 1,
+      "auc_best": 0.5689876215738284,
+      "long_tail_n": 171,
+      "long_tail_winrate": 0.5146198830409356,
+      "short_tail_n": 171,
+      "short_tail_winrate": 0.6608187134502924,
+      "best_tail_winrate": 0.6608187134502924,
+      "edge_vs_break_even": 0.07261871345029247
+    },
+    {
+      "factor": "ema_gap_f13_s55",
+      "samples": 804,
+      "sign": -1,
+      "auc_best": 0.5874569893803996,
+      "long_tail_n": 161,
+      "long_tail_winrate": 0.6149068322981367,
+      "short_tail_n": 161,
+      "short_tail_winrate": 0.6459627329192547,
+      "best_tail_winrate": 0.6459627329192547,
+      "edge_vs_break_even": 0.05776273291925471
+    },
+    {
+      "factor": "ema_gap_f8_s55",
+      "samples": 804,
+      "sign": -1,
+      "auc_best": 0.5811322622967052,
+      "long_tail_n": 161,
+      "long_tail_winrate": 0.5962732919254659,
+      "short_tail_n": 161,
+      "short_tail_winrate": 0.6149068322981367,
+      "best_tail_winrate": 0.6149068322981367,
+      "edge_vs_break_even": 0.02670683229813675
+    },
+    {
+      "factor": "ema_gap_f13_s34",
+      "samples": 825,
+      "sign": -1,
+      "auc_best": 0.5747748171491733,
+      "long_tail_n": 165,
+      "long_tail_winrate": 0.5515151515151515,
+      "short_tail_n": 165,
+      "short_tail_winrate": 0.6060606060606061,
+      "best_tail_winrate": 0.6060606060606061,
+      "edge_vs_break_even": 0.017860606060606132
+    },
+    {
+      "factor": "upper_shadow_ratio_ma8",
+      "samples": 851,
+      "sign": 1,
+      "auc_best": 0.5655282935455349,
+      "long_tail_n": 171,
+      "long_tail_winrate": 0.6023391812865497,
+      "short_tail_n": 171,
+      "short_tail_winrate": 0.5497076023391813,
+      "best_tail_winrate": 0.6023391812865497,
+      "edge_vs_break_even": 0.014139181286549785
+    },
+    {
+      "factor": "upper_shadow_ratio_ma3",
+      "samples": 856,
+      "sign": 1,
+      "auc_best": 0.541497378768021,
+      "long_tail_n": 175,
+      "long_tail_winrate": 0.6,
+      "short_tail_n": 174,
+      "short_tail_winrate": 0.5459770114942529,
+      "best_tail_winrate": 0.6,
+      "edge_vs_break_even": 0.011800000000000033
+    },
+    {
+      "factor": "ema_gap_f5_s55",
+      "samples": 804,
+      "sign": -1,
+      "auc_best": 0.5754325816273486,
+      "long_tail_n": 161,
+      "long_tail_winrate": 0.5962732919254659,
+      "short_tail_n": 161,
+      "short_tail_winrate": 0.5962732919254659,
+      "best_tail_winrate": 0.5962732919254659,
+      "edge_vs_break_even": 0.008073291925465909
+    },
+    {
+      "factor": "mfi_21",
+      "samples": 838,
+      "sign": -1,
+      "auc_best": 0.5668053339411899,
+      "long_tail_n": 168,
+      "long_tail_winrate": 0.5952380952380952,
+      "short_tail_n": 168,
+      "short_tail_winrate": 0.5535714285714286,
+      "best_tail_winrate": 0.5952380952380952,
+      "edge_vs_break_even": 0.007038095238095288
+    },
+    {
+      "factor": "realized_vol_13",
+      "samples": 845,
+      "sign": -1,
+      "auc_best": 0.5414359066346779,
+      "long_tail_n": 169,
+      "long_tail_winrate": 0.591715976331361,
+      "short_tail_n": 169,
+      "short_tail_winrate": 0.4970414201183432,
+      "best_tail_winrate": 0.591715976331361,
+      "edge_vs_break_even": 0.003515976331361026
+    },
+    {
+      "factor": "taker_buy_ratio_5",
+      "samples": 854,
+      "sign": 1,
+      "auc_best": 0.5337232781704052,
+      "long_tail_n": 171,
+      "long_tail_winrate": 0.49122807017543857,
+      "short_tail_n": 171,
+      "short_tail_winrate": 0.5906432748538012,
+      "best_tail_winrate": 0.5906432748538012,
+      "edge_vs_break_even": 0.002443274853801247
+    }
+  ],
+  "output_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_qlib_predictor_mine_3d"
+}

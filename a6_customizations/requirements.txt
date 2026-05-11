@@ -1,8 +1,7 @@
+# Pip-only or pip-preferred packages for the BTCUSDT 5min event-contract modules.
+# The local Qlib source tree is installed separately by
+# a6_customizations/qlib_predictor_environment/setup_env.sh.
+gym
 polars
-cython
-torch 
-torchvision 
-torchaudio
-pyqlib
-xgboost
-catboost
+protobuf>=3.20,<4
+python-redis-lock

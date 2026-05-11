@@ -1,5 +1,6 @@
 import requests
 import hashlib
+import zipfile
 from pathlib import Path
 from tqdm import tqdm
 from urllib.parse import urlparse
@@ -34,16 +35,18 @@ class BinanceDataDownloader:
     Binance数据下载器类，用于下载ZIP文件及其CHECKSUM文件并验证完整性。
     """
     
-    def __init__(self, chunk_size: int = 8192, timeout: int = 60):
+    def __init__(self, chunk_size: int = 8192, timeout: int = 60, max_retries: int = 3):
         """
         初始化下载器配置。
         
         Args:
             chunk_size (int): 下载文件时每次读取的字节数
             timeout (int): HTTP请求的超时时间
+            max_retries (int): 单个文件下载和校验失败后的最大尝试次数
         """
         self.chunk_size = chunk_size
         self.timeout = timeout
+        self.max_retries = max(1, int(max_retries))
     
     def _parse_url(self, url: str) -> str:
         """
@@ -80,7 +83,7 @@ class BinanceDataDownloader:
     
     def _download_zip_file(self, url: str, file_path: Path) -> bool:
         """
-        下载ZIP文件，带进度条显示。
+        下载ZIP文件，带进度条显示。先写入.part临时文件，完成后再原子替换目标文件。
         
         Args:
             url (str): 文件下载URL
@@ -91,6 +94,7 @@ class BinanceDataDownloader:
         """
         file_name = file_path.name
         logger.info(f"开始下载文件: {file_name} from {url}")
+        part_path = file_path.with_name(file_path.name + ".part")
         
         try:
             with requests.get(url, stream=True, timeout=self.timeout) as r:
@@ -99,12 +103,20 @@ class BinanceDataDownloader:
                 total_size = int(r.headers.get('content-length', 0))
                 
                 with tqdm(total=total_size, unit='B', unit_scale=True, desc=file_name) as pbar:
-                    with open(file_path, 'wb') as f:
+                    with open(part_path, 'wb') as f:
                         for chunk in r.iter_content(chunk_size=self.chunk_size):
                             if chunk:
                                 f.write(chunk)
                                 pbar.update(len(chunk))
-                                
+
+            if total_size and part_path.stat().st_size != total_size:
+                logger.error(
+                    f"文件 {file_name} 下载字节数不匹配: "
+                    f"expected={total_size}, actual={part_path.stat().st_size}"
+                )
+                return False
+
+            part_path.replace(file_path)
             logger.info(f"文件下载完成: {file_path}")
             return True
             
@@ -114,6 +126,9 @@ class BinanceDataDownloader:
         except IOError as e:
             logger.error(f"写入文件 {file_path} 失败: {e}")
             return False
+        finally:
+            if part_path.exists():
+                self._cleanup_files(part_path)
     
     def _download_checksum_file(self, checksum_url: str, checksum_path: Path) -> Optional[str]:
         """
@@ -134,7 +149,10 @@ class BinanceDataDownloader:
                 r.raise_for_status()
                 expected_checksum_line = r.text.strip()
                 # CHECKSUM文件内容通常是 "hash值 文件名"
-                expected_checksum = expected_checksum_line.split(' ')[0]
+                expected_checksum = expected_checksum_line.split()[0] if expected_checksum_line else ""
+                if len(expected_checksum) != 64 or any(c not in "0123456789abcdefABCDEF" for c in expected_checksum):
+                    logger.error(f"校验和文件格式异常: {expected_checksum_line}")
+                    return None
                 
                 with open(checksum_path, 'w') as f:
                     f.write(expected_checksum_line)
@@ -186,6 +204,63 @@ class BinanceDataDownloader:
         except Exception as e:
             logger.error(f"校验文件 {file_name} 时发生未知错误: {e}")
             return False
+
+    def _verify_zip_structure(self, file_path: Path) -> bool:
+        """
+        验证下载结果确实是可读取的ZIP文件，且内部包含CSV数据文件。
+
+        这一步用于防止HTTP错误页、下载残片、空ZIP等文件仅靠扩展名混入数据目录。
+        """
+        file_name = file_path.name
+        logger.info(f"开始验证ZIP结构: {file_name}")
+
+        if not file_path.exists():
+            logger.error(f"ZIP文件不存在: {file_path}")
+            return False
+        if file_path.stat().st_size <= 0:
+            logger.error(f"ZIP文件为空: {file_path}")
+            return False
+        if not zipfile.is_zipfile(file_path):
+            logger.error(f"文件不是有效ZIP: {file_path}")
+            return False
+
+        try:
+            with zipfile.ZipFile(file_path) as zf:
+                members = [name for name in zf.namelist() if not name.endswith("/")]
+                csv_members = [name for name in members if name.lower().endswith(".csv")]
+                if not members:
+                    logger.error(f"ZIP内没有数据文件: {file_path}")
+                    return False
+                if not csv_members:
+                    logger.error(f"ZIP内没有CSV数据文件: {file_path}, members={members[:5]}")
+                    return False
+                bad_member = zf.testzip()
+                if bad_member is not None:
+                    logger.error(f"ZIP内部文件CRC校验失败: {file_path}, bad_member={bad_member}")
+                    return False
+        except zipfile.BadZipFile as e:
+            logger.error(f"ZIP文件损坏: {file_path}, error={e}")
+            return False
+        except Exception as e:
+            logger.error(f"验证ZIP结构时发生未知错误: {file_path}, error={e}")
+            return False
+
+        logger.info(f"ZIP结构验证成功: {file_name}")
+        return True
+
+    def validate_existing_zip(self, file_path: Union[Path, str], cleanup_invalid: bool = False) -> bool:
+        """
+        验证本地已存在的ZIP文件是否可用于后续转换。
+
+        Args:
+            file_path: 本地ZIP文件路径
+            cleanup_invalid: 若验证失败，是否删除该坏文件
+        """
+        file_path = Path(file_path)
+        is_valid = self._verify_zip_structure(file_path)
+        if not is_valid and cleanup_invalid:
+            self._cleanup_files(file_path, file_path.with_name(file_path.name + ".part"))
+        return is_valid
     
     def _cleanup_files(self, *file_paths: Path) -> None:
         """
@@ -230,24 +305,35 @@ class BinanceDataDownloader:
         if not self.ensure_directory(target_directory):
             return None
         
-        # 3. 下载ZIP文件
-        if not self._download_zip_file(url, zip_file_path):
-            self._cleanup_files(zip_file_path)
-            return None
-        
-        # 4. 下载CHECKSUM文件
-        expected_checksum = self._download_checksum_file(checksum_url, checksum_file_path)
-        if expected_checksum is None:
-            self._cleanup_files(zip_file_path, checksum_file_path)
-            return None
-        
-        # 5. 验证文件完整性
-        if not self._verify_file_integrity(zip_file_path, expected_checksum):
-            self._cleanup_files(zip_file_path, checksum_file_path)
-            return None
-        
-        self._cleanup_files(checksum_file_path)
-        return zip_file_path
+        for attempt in range(1, self.max_retries + 1):
+            logger.info(f"下载尝试 {attempt}/{self.max_retries}: {file_name}")
+
+            # 3. 下载ZIP文件
+            if not self._download_zip_file(url, zip_file_path):
+                self._cleanup_files(checksum_file_path)
+                continue
+
+            # 4. 先验证ZIP结构，快速排除HTML错误页、下载残片和空ZIP
+            if not self._verify_zip_structure(zip_file_path):
+                self._cleanup_files(zip_file_path, checksum_file_path)
+                continue
+
+            # 5. 下载CHECKSUM文件
+            expected_checksum = self._download_checksum_file(checksum_url, checksum_file_path)
+            if expected_checksum is None:
+                self._cleanup_files(zip_file_path, checksum_file_path)
+                continue
+
+            # 6. 验证文件完整性
+            if not self._verify_file_integrity(zip_file_path, expected_checksum):
+                self._cleanup_files(zip_file_path, checksum_file_path)
+                continue
+
+            self._cleanup_files(checksum_file_path)
+            return zip_file_path
+
+        logger.error(f"文件 {file_name} 下载失败，已达到最大尝试次数: {self.max_retries}")
+        return None
 
 
 # --- 使用示例 ---

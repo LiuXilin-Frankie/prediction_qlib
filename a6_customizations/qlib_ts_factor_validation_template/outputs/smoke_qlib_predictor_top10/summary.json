@@ -1,0 +1,28 @@
+{
+  "config": {
+    "factor_panel": "a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_qlib_predictor_mine_3d/factor_panel.parquet",
+    "output_dir": "a6_customizations/qlib_ts_factor_validation_template/outputs/smoke_qlib_predictor_top10",
+    "factor_rankings": "a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_qlib_predictor_mine_3d/factor_rankings.csv",
+    "factor_rankings_by_instrument": null,
+    "top_k": 10,
+    "eval_quantile": 0.2,
+    "break_even_winrate": 0.5882,
+    "payout_win": 3.5,
+    "payout_loss": 5.0,
+    "rolling_window_samples": 2016,
+    "rolling_step_samples": 288,
+    "min_samples": 1000
+  },
+  "n_instruments": 1,
+  "instruments": [
+    "BTCUSDT"
+  ],
+  "n_factor_candidates_all": 10,
+  "n_factor_evaluated_all": 0,
+  "n_rolling_rows_all": 0,
+  "n_factor_evaluated_by_instrument": 0,
+  "n_rolling_rows_by_instrument": 0,
+  "top10_all": [],
+  "top10_by_instrument": [],
+  "output_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/qlib_ts_factor_validation_template/outputs/smoke_qlib_predictor_top10"
+}

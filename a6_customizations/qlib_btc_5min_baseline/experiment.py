@@ -519,6 +519,8 @@ def _fit_xgboost(
     valid_df: pd.DataFrame,
     config: BaselineConfig,
 ) -> object:
+    import inspect
+
     from xgboost import XGBClassifier
 
     x_train = train_df.drop(columns=["future_return", "is_flat", "target"])
@@ -537,13 +539,16 @@ def _fit_xgboost(
         raise ValueError("Validation segment contains only one class after filtering flat samples.")
 
     model = XGBClassifier(**config.resolved_model_params("xgboost"))
-    model.fit(
-        x_train,
-        y_train,
-        eval_set=[(x_valid, y_valid)],
-        verbose=False,
-        early_stopping_rounds=50,
-    )
+    fit_kwargs = {
+        "eval_set": [(x_valid, y_valid)],
+        "verbose": False,
+    }
+    if "early_stopping_rounds" in inspect.signature(model.fit).parameters:
+        fit_kwargs["early_stopping_rounds"] = 50
+    elif "early_stopping_rounds" not in model.get_params():
+        model.set_params(early_stopping_rounds=50)
+
+    model.fit(x_train, y_train, **fit_kwargs)
     return model
 
 

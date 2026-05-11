@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-05-10T14:38:58Z",
+  "pipeline": "binance_1min_6symbols_official",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "BNBUSDT",
+    "DOGEUSDT"
+  ],
+  "start_date": "2024-01-01",
+  "end_date": "2026-05-08",
+  "download_summary": {
+    "pairs": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "XRPUSDT",
+      "BNBUSDT",
+      "DOGEUSDT"
+    ],
+    "start_date": "2024-01-01",
+    "end_date": "2026-05-08",
+    "overwrite_mode": false,
+    "total_success": 0,
+    "total_failed": 0,
+    "failed_downloads": {},
+    "pair_summaries": {
+      "BTCUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      },
+      "ETHUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      },
+      "SOLUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      },
+      "XRPUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      },
+      "BNBUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      },
+      "DOGEUSDT": {
+        "existing_dates": 859,
+        "requested_dates": 0,
+        "success_count": 0,
+        "failed_count": 0,
+        "failed_dates": []
+      }
+    }
+  },
+  "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min",
+  "source_symbols": [
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "missing_in_source": [],
+  "source_details": {
+    "BTCUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BTCUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    },
+    "ETHUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/ETHUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    },
+    "SOLUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/SOLUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    },
+    "XRPUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/XRPUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    },
+    "BNBUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BNBUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    },
+    "DOGEUSDT": {
+      "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/DOGEUSDT",
+      "zip_count": 859,
+      "zip_first": "2024-01-01",
+      "zip_last": "2026-05-08"
+    }
+  }
+}
