@@ -31,7 +31,7 @@ class GetData:
     def __init__(self, delete_zip_file=False):
         # 初始化，是否数据转化后删除下载的zip文件
         """
-        
+
         Parameters
         ----------
         delete_zip_file : bool, optional
@@ -67,8 +67,8 @@ class GetData:
         """
         file_name = str(target_path).rsplit("/", maxsplit=1)[-1]
         resp = requests.get(url, stream=True, timeout=60)
-        #快速检查http响应代码
-        resp.raise_for_status() 
+        # 快速检查http响应代码
+        resp.raise_for_status()
         if resp.status_code != 200:
             raise requests.exceptions.HTTPError()
 
@@ -230,6 +230,3 @@ class GetData:
         if not self.check_dataset(file_name):
             file_name = _get_file_name_with_version("latest", dataset_version=version)
         self.download_data(file_name.lower(), target_dir, delete_old)
-        
-        
-        

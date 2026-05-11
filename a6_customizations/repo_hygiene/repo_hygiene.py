@@ -74,7 +74,9 @@ def read_staged_file(path_str: str) -> bytes:
         capture_output=True,
     )
     if result.returncode != 0:
-        raise RuntimeError(result.stderr.decode("utf-8", errors="replace").strip() or f"unable to read staged file: {path_str}")
+        raise RuntimeError(
+            result.stderr.decode("utf-8", errors="replace").strip() or f"unable to read staged file: {path_str}"
+        )
     return result.stdout
 
 
@@ -146,7 +148,9 @@ def command_check_staged_notebooks(args: argparse.Namespace) -> int:
 
 
 def iter_git_files(include_untracked: bool) -> list[str]:
-    tracked = subprocess.run(["git", "ls-files"], cwd=ROOT_DIR, check=True, capture_output=True, text=True).stdout.splitlines()
+    tracked = subprocess.run(
+        ["git", "ls-files"], cwd=ROOT_DIR, check=True, capture_output=True, text=True
+    ).stdout.splitlines()
     if not include_untracked:
         return tracked
     untracked = subprocess.run(
@@ -191,14 +195,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Repository hygiene helpers for notebook and artifact management.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    clean_stdin_parser = subparsers.add_parser("clean-stdin", help="Strip notebook outputs from stdin and write the cleaned notebook to stdout.")
+    clean_stdin_parser = subparsers.add_parser(
+        "clean-stdin", help="Strip notebook outputs from stdin and write the cleaned notebook to stdout."
+    )
     clean_stdin_parser.set_defaults(func=command_clean_stdin)
 
-    strip_notebook_parser = subparsers.add_parser("strip-notebook", help="Strip outputs and execution counts from notebook files in place.")
+    strip_notebook_parser = subparsers.add_parser(
+        "strip-notebook", help="Strip outputs and execution counts from notebook files in place."
+    )
     strip_notebook_parser.add_argument("paths", nargs="+")
     strip_notebook_parser.set_defaults(func=command_strip_notebook)
 
-    check_paths_parser = subparsers.add_parser("check-paths", help="Reject staged files that match blocked generated-artifact patterns.")
+    check_paths_parser = subparsers.add_parser(
+        "check-paths", help="Reject staged files that match blocked generated-artifact patterns."
+    )
     check_paths_parser.add_argument("paths", nargs="*")
     check_paths_parser.set_defaults(func=command_check_paths)
 
