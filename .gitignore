@@ -1,28 +1,44 @@
-*.zip
-*.bin
-*.parquet
-
-# https://github.com/github/gitignore/blob/master/Python.gitignore
+# Python cache and build artifacts
 __pycache__/
-__pycache__
-
 *.pyc
+*.pyo
 *.pyd
 *.so
-.ipynb_checkpoints
-_build
+*.egg-info/
+.ipynb_checkpoints/
+_build/
 build/
 dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
 
-*.pkl
-*.hd5
-*.csv
-
+# Editor and OS noise
 .env
 .vim
 .nvimrc
-.vscode
+.vscode/
+.idea/
+*.swp
+.DS_Store
+tags
+.aider*
 
+# Repo-local data and generated research artifacts
+*.part
+a6_customizations/binance_data-qlib/binance_data_1min/
+a6_customizations/binance_data-qlib/csv_data_1min*/
+a6_customizations/binance_data-qlib/qlib_data_1min/features/
+a6_customizations/**/__pycache__/
+a6_customizations/**/.ipynb_checkpoints/
+a6_customizations/**/outputs/**
+!a6_customizations/**/outputs/**/
+!a6_customizations/**/outputs/**/*.json
+
+# Upstream project specifics
 qlib/VERSION.txt
 qlib/data/_libs/expanding.cpp
 qlib/data/_libs/rolling.cpp
@@ -33,24 +49,10 @@ examples/rl/outputs/
 examples/rl_order_execution/data/
 examples/rl_order_execution/outputs/
 
-*.egg-info/
-
-# test related
+# Test related
 test-output.xml
 .output
 .data
-
-# special software
 mlruns/
 
-tags
-
-.pytest_cache/
-.mypy_cache/
-.vscode/
-
-*.swp
-
 ./pretrain
-.idea/
-.aider*

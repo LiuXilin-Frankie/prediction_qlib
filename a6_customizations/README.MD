@@ -60,6 +60,9 @@
 - `qlib_ts_factor_validation_template`：面向单标的时序任务的通用因子验证模板，输出 `AUC`、尾部胜率、`edge_vs_break_even`、滚动稳定性和最长连亏等指标  
   详细文档见：[a6_customizations/qlib_ts_factor_validation_template/README.MD](./qlib_ts_factor_validation_template/README.MD)
 
+- `repo_hygiene`：仓库提交治理模块，负责 `notebook` 自动去输出、pre-commit 护栏以及重数据/明细产物的提交边界约束  
+  详细文档见：[a6_customizations/repo_hygiene/README.MD](./repo_hygiene/README.MD)
+
 
 
 ## Qlib 功能导航索引（文档 / 函数 / 代码 / 示例 一一对应）

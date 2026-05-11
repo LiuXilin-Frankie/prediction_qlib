@@ -204,6 +204,14 @@ manifest 说明：
 - `qlib_manifest.json`：Qlib instruments、feature 字段、calendar 概览
 - `contract_summary.json`：完整 6-symbol contract 检查结果
 
+## 仓库提交约定
+
+- `binance_data_1min/` 原始 zip 默认只保留本地，不提交到 Git
+- `csv_data_1min*/` 中间 `Parquet` 默认只保留本地，不提交到 Git
+- `qlib_data_1min/features/` 视为可重建的 Qlib 二进制特征，不提交到 Git
+- `manifests/official_1min_6symbols/*.json` 作为轻量契约与复现摘要，继续纳入 Git
+- `data_get_try.ipynb` 允许提交，但仓库中的提交版本会自动清空 `output` 与 `execution_count`
+
 ## 注意事项
 
 - 下载失败会被记录，可通过 `get_failed_downloads()` 查看。

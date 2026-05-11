@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:38:58Z",
+  "generated_at": "2026-05-11T13:20:18Z",
   "pipeline": "binance_1min_6symbols_official",
   "symbols": [
     "BTCUSDT",
@@ -9,8 +9,10 @@
     "BNBUSDT",
     "DOGEUSDT"
   ],
-  "start_date": "2024-01-01",
-  "end_date": "2026-05-08",
+  "freq": "1min",
+  "source_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min",
+  "csv_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min",
+  "qlib_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/qlib_data_1min",
   "download_summary": {
     "pairs": [
       "BTCUSDT",
@@ -21,57 +23,56 @@
       "DOGEUSDT"
     ],
     "start_date": "2024-01-01",
-    "end_date": "2026-05-08",
+    "end_date": "2026-05-09",
     "overwrite_mode": false,
-    "total_success": 0,
+    "total_success": 6,
     "total_failed": 0,
     "failed_downloads": {},
     "pair_summaries": {
       "BTCUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       },
       "ETHUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       },
       "SOLUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       },
       "XRPUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       },
       "BNBUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       },
       "DOGEUSDT": {
         "existing_dates": 859,
-        "requested_dates": 0,
-        "success_count": 0,
+        "requested_dates": 1,
+        "success_count": 1,
         "failed_count": 0,
         "failed_dates": []
       }
     }
   },
-  "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min",
   "source_symbols": [
     "BNBUSDT",
     "BTCUSDT",
@@ -84,39 +85,39 @@
   "source_details": {
     "BTCUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BTCUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "ETHUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/ETHUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "SOLUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/SOLUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "XRPUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/XRPUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "BNBUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BNBUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "DOGEUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/DOGEUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     }
   }
 }

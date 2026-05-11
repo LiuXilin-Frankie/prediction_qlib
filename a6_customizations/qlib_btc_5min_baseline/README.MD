@@ -155,6 +155,7 @@ python a6_customizations/qlib_btc_5min_baseline/train_walk_forward.py \
 
 - 训练入口会自动预加载系统 `libstdc++.so.6`，修复本地 `LightGBM` 运行时依赖问题
 - 输出目录包含 `summary.json`、`window_metrics.csv`、`trade_log.csv`
+- 仓库默认只跟踪 `summary.json`、`config.json` 以及必要的 comparison JSON；`trade_log.csv`、`window_metrics.csv` 视为本地明细产物
 
 ## 实验对比结论表（更新）
 

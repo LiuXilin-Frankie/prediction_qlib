@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:38:53Z",
+  "generated_at": "2026-05-11T13:20:18Z",
   "pipeline": "binance_1min_6symbols_official",
   "symbols": [
     "BTCUSDT",
@@ -35,39 +35,39 @@
   "source_details": {
     "BTCUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BTCUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "ETHUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/ETHUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "SOLUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/SOLUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "XRPUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/XRPUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "BNBUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/BNBUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     },
     "DOGEUSDT": {
       "zip_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/binance_data_1min/DOGEUSDT",
-      "zip_count": 859,
+      "zip_count": 860,
       "zip_first": "2024-01-01",
-      "zip_last": "2026-05-08"
+      "zip_last": "2026-05-09"
     }
   },
   "parquet_symbols": [
@@ -83,38 +83,38 @@
     "BTCUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/BTCUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     },
     "ETHUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/ETHUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     },
     "SOLUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/SOLUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     },
     "XRPUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/XRPUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     },
     "BNBUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/BNBUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     },
     "DOGEUSDT": {
       "path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/binance_data-qlib/csv_data_1min/DOGEUSDT.parquet",
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00",
-      "rows": 1236960
+      "end": "2026-05-09 23:59:00",
+      "rows": 1238400
     }
   },
   "qlib_symbols": [
@@ -137,31 +137,31 @@
   "qlib_instrument_details": {
     "BTCUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     },
     "ETHUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     },
     "SOLUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     },
     "XRPUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     },
     "BNBUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     },
     "DOGEUSDT": {
       "start": "2024-01-01 00:00:00",
-      "end": "2026-05-08 23:59:00"
+      "end": "2026-05-09 23:59:00"
     }
   },
-  "calendar_rows": 1236960,
-  "calendar_end": "2026-05-08 23:59:00",
+  "calendar_rows": 1238400,
+  "calendar_end": "2026-05-09 23:59:00",
   "missing_feature_fields": [],
   "missing_in_qlib": [],
   "time_mismatches": []

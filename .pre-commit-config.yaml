@@ -1,4 +1,18 @@
 repos:
+-   repo: local
+    hooks:
+    -   id: repo-hygiene-paths
+        name: block generated data and noisy artifacts
+        entry: python3 a6_customizations/repo_hygiene/repo_hygiene.py check-paths
+        language: system
+        pass_filenames: true
+    -   id: repo-hygiene-notebooks
+        name: verify staged notebooks are stripped
+        entry: python3 a6_customizations/repo_hygiene/repo_hygiene.py check-staged-notebooks
+        language: system
+        files: \.ipynb$
+        pass_filenames: true
+
 -   repo: https://github.com/psf/black
     rev: 23.7.0
     hooks:
