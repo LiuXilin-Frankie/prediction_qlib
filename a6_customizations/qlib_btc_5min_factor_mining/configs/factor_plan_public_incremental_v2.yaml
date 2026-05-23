@@ -1,0 +1,329 @@
+meta:
+  plan_name: public_incremental_v2
+  status: confirmed
+  feature_construction: ohlcv_default
+  target:
+    task: binary_direction
+    entry_price: t_plus_1_open
+    settle_price: t_plus_6_open
+    horizon_minutes: 5
+  objective:
+    primary: improve_high_confidence_winrate
+    secondary: reduce_losing_streak
+    break_even_winrate: 0.5882
+  note: "single-instrument BTCUSDT plan; public formulas are adapted for time-series use only"
+
+global_params:
+  short_windows: [3, 5, 8, 13, 21, 34, 55]
+  eps: 1.0e-12
+
+factors:
+  - name: alpha158_ma
+    family: trend_shape_quality
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "short-window moving-average location vs current close"
+
+  - name: alpha158_beta
+    family: trend_shape_quality
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "rolling slope of close normalized by current price"
+
+  - name: alpha158_rsqr
+    family: trend_shape_quality
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "trend linearity proxy for continuation vs chop"
+
+  - name: alpha158_resi
+    family: trend_shape_quality
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "residual vs rolling trend to detect stretched states"
+
+  - name: alpha158_max
+    family: price_position
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "distance to recent local high regime"
+
+  - name: alpha158_min
+    family: price_position
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "distance to recent local low regime"
+
+  - name: alpha158_qtlu
+    family: price_position
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "upper quantile anchor to judge current price richness"
+
+  - name: alpha158_qtld
+    family: price_position
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "lower quantile anchor to judge current price cheapness"
+
+  - name: alpha158_rsv
+    family: price_position
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "close location within recent high-low envelope"
+
+  - name: alpha158_imax
+    family: trend_timing_structure
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "bars since recent highest high"
+
+  - name: alpha158_imin
+    family: trend_timing_structure
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "bars since recent lowest low"
+
+  - name: alpha158_imxd
+    family: trend_timing_structure
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "ordering gap between recent high and recent low timestamps"
+
+  - name: alpha158_corr
+    family: price_volume_linkage
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "rolling correlation between close and log volume"
+
+  - name: alpha158_cord
+    family: price_volume_linkage
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "rolling correlation between return and volume change"
+
+  - name: alpha158_cntp
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of up bars in recent window"
+
+  - name: alpha158_cntn
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of down bars in recent window"
+
+  - name: alpha158_cntd
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "difference between up-bar share and down-bar share"
+
+  - name: alpha158_sump
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of positive price move magnitude"
+
+  - name: alpha158_sumn
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of negative price move magnitude"
+
+  - name: alpha158_sumd
+    family: directional_consistency
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "signed price-move dominance ratio"
+
+  - name: alpha158_vma
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "volume moving-average ratio vs current volume"
+
+  - name: alpha158_vstd
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "volume volatility normalized by current volume"
+
+  - name: alpha158_wvma
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "volume-weighted price shock volatility"
+
+  - name: alpha158_vsump
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of positive volume change magnitude"
+
+  - name: alpha158_vsumn
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "share of negative volume change magnitude"
+
+  - name: alpha158_vsumd
+    family: volume_state
+    source: alpha158_rolling_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "signed volume-flow dominance ratio"
+
+  - name: flow_trade_count
+    family: count_intensity
+    source: flow_liquidity_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34, 55]
+    rationale: "trade count shock, ratio and local volatility"
+
+  - name: flow_trade_size
+    family: count_intensity
+    source: flow_liquidity_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [5, 8, 13, 21, 34, 55]
+    rationale: "average base and quote size per trade"
+
+  - name: flow_taker_buy
+    family: taker_flow
+    source: flow_liquidity_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34]
+    rationale: "aggressive-buy imbalance, count proxy and flow surprise"
+
+  - name: liquidity_amihud
+    family: liquidity_proxy
+    source: flow_liquidity_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [5, 8, 13, 21, 34, 55]
+    rationale: "return impact per unit quote volume"
+
+  - name: liquidity_efficiency
+    family: liquidity_proxy
+    source: flow_liquidity_v2
+    enabled: true
+    status: confirmed
+    params:
+      window: [5, 8, 13, 21, 34, 55]
+    rationale: "range or return generated per unit turnover or trade count"
+
+  - name: alpha101_price_volume_rel
+    family: public_formula_adaptation
+    source: alpha101_subset_v1
+    enabled: true
+    status: confirmed
+    params:
+      window: [3, 5, 8, 13, 21, 34]
+    rationale: "adapted alpha101-style price-volume correlation and covariance formulas"
+
+  - name: alpha101_delay_rank_decay
+    family: public_formula_adaptation
+    source: alpha101_subset_v1
+    enabled: true
+    status: confirmed
+    params:
+      rank_window: [5, 8, 13, 21]
+      delta_window: [1, 3, 5]
+      decay_window: [3, 5, 8]
+    rationale: "adapted alpha101 delay, delta, ts-rank and decay-linear formulas"
+
+  - name: alpha101_vwap_volatility
+    family: public_formula_adaptation
+    source: alpha101_subset_v1
+    enabled: true
+    status: confirmed
+    params:
+      zscore_window: [5, 8, 13, 21, 34]
+      short_window: [3, 5, 8]
+      long_window: [13, 21, 34]
+    rationale: "adapted alpha101 VWAP deviation and compression-expansion formulas"

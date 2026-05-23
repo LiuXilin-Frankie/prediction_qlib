@@ -30,6 +30,7 @@ def _render_factor_specs(plan: Dict[str, Any]) -> List[Dict[str, Any]]:
             {
                 "name": factor.get("name"),
                 "family": factor.get("family"),
+                "source": factor.get("source", factor.get("family")),
                 "status": factor.get("status", "proposed"),
                 "params": factor.get("params", {}),
                 "rationale": factor.get("rationale", ""),

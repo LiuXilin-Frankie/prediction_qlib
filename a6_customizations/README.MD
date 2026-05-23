@@ -54,7 +54,7 @@
 - `qlib_btc_5min_baseline`：使用Qlib内置 `Alpha158` 因子与 `LightGBM`，对 `BTCUSDT` 的 `5分钟` 事件合约进行滚动训练、阈值筛选与测试集交易模拟的 baseline 方案  
   详细文档见：[a6_customizations/qlib_btc_5min_baseline/README.MD](./qlib_btc_5min_baseline/README.MD)
 
-- `qlib_btc_5min_factor_mining`：面向 `t+1 open -> t+6 open` 事件目标的增量因子挖掘子项目；先进行候选因子与参数确认，再执行正式挖掘与训练对比  
+- `qlib_btc_5min_factor_mining`：面向 `t+1 open -> t+6 open` 事件目标的增量因子挖掘子项目；现已支持 `Alpha158 rolling`、`flow/liquidity` 与 `Alpha101` 改写子集三层公开因子计划，以及按 `source/family` 聚合输出  
   详细文档见：[a6_customizations/qlib_btc_5min_factor_mining/README.MD](./qlib_btc_5min_factor_mining/README.MD)
 
 - `qlib_ts_factor_validation_template`：面向单标的时序任务的通用因子验证模板，输出 `AUC`、尾部胜率、`edge_vs_break_even`、滚动稳定性和最长连亏等指标  

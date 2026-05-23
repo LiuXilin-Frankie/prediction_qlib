@@ -1,0 +1,32 @@
+{
+  "config": {
+    "plan_path": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_alpha101_subset_v1.yaml",
+    "provider_uri": "a6_customizations/binance_data-qlib/qlib_data_1min",
+    "instrument": "BTCUSDT",
+    "freq": "1min",
+    "entry_offset_minutes": 1,
+    "horizon_minutes": 5,
+    "sample_minutes": 5,
+    "lookback_days": 1,
+    "output_dir": "a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_alpha101_subset_v1_1d",
+    "eval_quantile": 0.2,
+    "min_samples_per_factor": 500,
+    "eps": 1e-12
+  },
+  "plan_name": "alpha101_subset_v1",
+  "status": "confirmed",
+  "n_instruments": 1,
+  "instruments": [
+    "BTCUSDT"
+  ],
+  "n_rows": 282,
+  "n_factor_columns": 73,
+  "n_ranked_factors": 0,
+  "n_ranked_factors_by_instrument": 0,
+  "n_sources": 0,
+  "n_families": 0,
+  "top10": [],
+  "source_summary": [],
+  "family_summary": [],
+  "output_dir": "/Users/liuxilin/Desktop/prediction_qlib/a6_customizations/qlib_btc_5min_factor_mining/outputs/smoke_alpha101_subset_v1_1d"
+}

@@ -12,7 +12,8 @@
 
 - 本模块已完成初始化（目录、配置、脚本骨架）
 - 技术指标因子计划已确认（`factor_plan_tech_v1.yaml`）
-- 已支持首版自动挖掘与单因子排名输出
+- 已新增公开增量因子 `v2` 计划，分为 `alpha158_rolling_v2`、`flow_liquidity_v2`、`alpha101_subset_v1`
+- 已支持首版自动挖掘、单因子排名输出，以及按 `source / family / plan_factor` 的聚合摘要
 
 ## 目录结构
 
@@ -20,10 +21,15 @@
 qlib_btc_5min_factor_mining/
 ├── README.MD
 ├── configs/
-│   └── factor_plan_tech_v1.yaml
+│   ├── factor_plan_tech_v1.yaml
+│   ├── factor_plan_tech_close5m_short_v1.yaml
+│   ├── factor_plan_public_incremental_v2.yaml
+│   └── factor_plan_alpha101_subset_v1.yaml
 ├── scripts/
 │   ├── build_factor_expressions.py
-│   └── run_factor_mining.py
+│   ├── factor_mining_pipeline.py
+│   ├── run_factor_mining.py
+│   └── compare_with_alpha158.py
 └── outputs/
 ```
 
@@ -43,11 +49,40 @@ qlib_btc_5min_factor_mining/
 - 趋势/动量：`EMA gap`、`MACD`、`RSI`、`ROC`
 - 波动率：`ATR`、`真实波动率`、`布林带带宽`
 - 量价压力：`OBV`、`MFI`、`CMF`、`主动买比例`
-- 微结构代理：`high-low range`、`close location value`、`k线实体/影线比`
+- 微结构代理：`high-low range`、`close location value`、`K线实体/影线比`
+
+## 公开增量因子范围（v2）
+
+当前使用 `configs/factor_plan_public_incremental_v2.yaml` 进行第二阶段扩展，分三层管理：
+
+- `alpha158_rolling_v2`
+  - 复用并显式筛选 `Alpha158` 里更完整的 rolling 家族
+  - 覆盖 `MA/BETA/RSQR/RESI/MAX/MIN/QTLU/QTLD/RSV/IMAX/IMIN/IMXD/CORR/CORD/CNTP/CNTN/CNTD/SUMP/SUMN/SUMD/VMA/VSTD/WVMA/VSUMP/VSUMN/VSUMD`
+- `flow_liquidity_v2`
+  - 使用 Binance 现有字段：`count`、`quote_volume`、`taker_buy_volume`、`taker_buy_quote_volume`
+  - 重点覆盖 `trade_count_zscore`、`avg_trade_size`、`taker_buy_imbalance`、`flow_surprise`、`amihud_like_illiq`、`range_per_trade`
+- `alpha101_subset_v1`
+  - 只保留适合单标的时序任务的公开公式改写版
+  - 重点覆盖三类：价格/量价相关与协方差、短周期 `delay/delta/ts-rank/decay`、`VWAP` 偏离与压缩扩张
+
+说明：
+
+- `alpha101_subset_v1` 是“公开公式来源的改写版”，不是原始 `Alpha101` 全量原封不动复刻。
+- 明确排除依赖横截面排序、行业中性化、多资产相对排名才有原意的公式。
+- `Alpha360` 暂不纳入单因子挖掘主线，保留为后续模型输入候选。
+
+## 字段依赖与对齐约束
+
+- `alpha158_rolling_v2`：主要依赖 `open/high/low/close/volume`
+- `flow_liquidity_v2`：额外依赖 `count / quote_volume / taker_buy_volume / taker_buy_quote_volume`
+- `alpha101_subset_v1`：当前只使用现有 `OHLCV + VWAP + volume`
+- 所有因子都只允许使用决策时点 `t` 及以前可见的数据
+- 标签保持为 `t+1 open -> t+6 open`
+- 不引入 funding、basis、mark/index price、trade 明细或 order book
 
 ## 使用方式
 
-1) 查看候选计划：
+1) 查看技术指标 `v1` 计划：
 
 ```bash
 python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
@@ -55,7 +90,15 @@ python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.p
   --mode show-plan
 ```
 
-2) 执行技术指标因子挖掘（示例：最近30天，单标的）：
+2) 查看公开增量 `v2` 计划：
+
+```bash
+python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
+  --plan a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_public_incremental_v2.yaml \
+  --mode show-plan
+```
+
+3) 执行技术指标因子挖掘（示例：最近30天，单标的）：
 
 ```bash
 python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
@@ -66,7 +109,29 @@ python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.p
   --mode mine
 ```
 
-3) 执行多标的联合挖掘（`ALL`）：
+4) 执行公开增量 `v2` 挖掘（示例：最近30天，单标的）：
+
+```bash
+python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
+  --plan a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_public_incremental_v2.yaml \
+  --instrument BTCUSDT \
+  --lookback-days 30 \
+  --output-dir a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_public_incremental_v2_30d \
+  --mode mine
+```
+
+5) 单独验证 `alpha101` 改写子集：
+
+```bash
+python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
+  --plan a6_customizations/qlib_btc_5min_factor_mining/configs/factor_plan_alpha101_subset_v1.yaml \
+  --instrument BTCUSDT \
+  --lookback-days 30 \
+  --output-dir a6_customizations/qlib_btc_5min_factor_mining/outputs/mine_alpha101_subset_v1_30d \
+  --mode mine
+```
+
+6) 执行多标的联合挖掘（`ALL`）：
 
 ```bash
 python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
@@ -77,13 +142,17 @@ python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.p
   --mode mine
 ```
 
-多标的输出说明：
+输出说明：
 
 - `factor_panel.parquet`：包含 `instrument` 列
-- `factor_rankings.csv`：所有标的混合后的总体排名（ALL）
+- `factor_metadata.csv`：每个因子的 `plan_factor / family / source / rationale`
+- `factor_rankings.csv`：总体排名
 - `factor_rankings_by_instrument.csv`：逐标的排名
+- `factor_source_summary.csv`：按 `source` 聚合的 edge/AUC 摘要
+- `factor_family_summary.csv`：按 `family` 聚合的 edge/AUC 摘要
+- `factor_plan_factor_summary.csv`：按计划中的逻辑因子组聚合
 
-4) 对比自定义因子与 `Alpha158` 的因子回测效果：
+7) 对比自定义因子与 `Alpha158` 的因子回测效果：
 
 ```bash
 python a6_customizations/qlib_btc_5min_factor_mining/scripts/compare_with_alpha158.py \
@@ -99,7 +168,7 @@ python a6_customizations/qlib_btc_5min_factor_mining/scripts/compare_with_alpha1
 - `factor_backtest_comparison_alpha158.csv`：仅 `Alpha158` 因子
 - `source_summary.csv`：按因子来源的聚合对比
 
-5) close-only 5min 短周期构建（`t, t-5, t-10...`）：
+8) close-only 5min 短周期构建（`t, t-5, t-10...`）：
 
 ```bash
 python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.py \
@@ -122,5 +191,5 @@ python a6_customizations/qlib_btc_5min_factor_mining/scripts/run_factor_mining.p
 
 - 把优选因子接入滚动训练，与 baseline 做逐窗对比
 - 重点跟踪：`best_tail_winrate`、`edge_vs_break_even`、`最长连亏`
-- 根据结果再做 v2 参数收缩与共线性去重
+- 根据结果再做 `v2` 参数收缩与共线性去重
 - 时序专项验证模板见：`a6_customizations/qlib_ts_factor_validation_template/README.MD`
